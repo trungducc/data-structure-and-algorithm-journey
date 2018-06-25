@@ -20,5 +20,5 @@ add_subdirectory("${CMAKE_BINARY_DIR}/lib/googletest/src"
                  "${CMAKE_BINARY_DIR}/lib/googletest/build")
 
 # Link targets against gtest, gmock,
-# add_subdirectory(array)
+add_subdirectory(dynamic_array)
 # add_subdirectory(singly_linked_list)
