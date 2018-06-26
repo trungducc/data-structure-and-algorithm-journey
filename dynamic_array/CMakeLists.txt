@@ -1,0 +1,12 @@
+cmake_minimum_required(VERSION 3.11)
+
+include_directories(
+    "include/dynamic_array"
+    "test")
+
+set(SOURCE_FILES test/array_test.cc)
+
+add_executable(dynamic_array ${SOURCE_FILES})
+target_link_libraries(dynamic_array gtest_main)
+
+add_test(NAME dynamic_array_test COMMAND dynamic_array)
