@@ -1,16 +1,15 @@
-#ifndef CPP_DYNAMIC_ARRAY_H_
-#define CPP_DYNAMIC_ARRAY_H_
+#pragma once
 
 #include <iostream>
 
 namespace td {
 
-static const int kMinCapacity = 16;
+constexpr int min_capacity = 16;
 // https://stackoverflow.com/questions/1100311/what-is-the-ideal-growth-rate-for-a-dynamically-allocated-array
-static const int kGrowthFactor = 2;
-static const int kShrinkFactor = 4;
+constexpr int growth_factor = 2;
+constexpr int shrink_factor = 4;
 
-static const int kIndexNotFound = -1;
+constexpr int index_not_found = -1;
 
 template <typename T>
 class Array;
@@ -24,49 +23,49 @@ class Array {
  public:
   Array();
   Array(size_t capacity);
-  Array(std::initializer_list<T> il);
+  Array(std::initializer_list<T>&& il);
 
-  Array(const Array<T>& array);
-  Array(Array<T>&& array);
+  Array(const Array<T>& other);
+  Array(Array<T>&& other);
 
-  Array<T>& operator=(const Array<T>& array);
-  Array<T>& operator=(Array<T>&& array);
+  Array<T>& operator=(const Array<T>& other);
+  Array<T>& operator=(Array<T>&& other);
 
   ~Array();
 
   // Return number of items are currently stored in array.
-  size_t GetSize();
+  size_t size();
 
   // Return number of items it can hold.
-  size_t GetCapacity();
+  size_t capacity();
 
   // Return array is empty or not.
-  bool IsEmpty();
+  bool is_empty();
 
   // Return items at |index|.
-  T GetItemAt(int index);
+  T item_at(int index);
 
   // Append |item| to the end of array.
-  void Append(const T& item);
+  void append(const T& item);
 
   // Insert |item| at |index|.
-  void Insert(const T& item, int index);
+  void insert(const T& item, int index);
 
   // Prepend |item| to the array.
-  void Prepend(const T& item);
+  void prepend(const T& item);
 
   // Remove last item and return it.
-  T Pop();
+  T pop();
 
-  // Delete item at |index|
-  void Delete(int index);
+  // Remove item at |index|
+  void remove_at(int index);
 
   // Look for |item|, remove index holding it.
-  void Remove(const T& item);
+  void remove(const T& item);
 
   // Look for |item|, return first index with this
   // value, returns |kIndexNotFound| if not found
-  int Find(const T& item);
+  int find(const T& item);
 
   // Swap values inside |first| and |second|.
   // Follow copy-and-swap idiom
@@ -76,15 +75,15 @@ class Array {
  private:
   // If |index| is a negative value or greater than
   // |size_|, log an error and terminate program.
-  void ThrowIndexOutOfBoundsErrorIfNeeded(int index);
+  void throw_out_of_range_error_if_needed(int index);
 
   // If |new_size| is equal or greater than |capacity_|, allocate
   // new array with double capacity. If |new_size| is equal or less
   // than |capacity_| / 4, allocate new array with half of capacity.
-  void ReallocateIfNeeded(size_t new_size);
+  void reallocate_if_needed(size_t new_size);
 
   // Deep copy |items_| from |array|
-  void DeepCopy(const Array<T>& array);
+  void deep_copy(const Array<T>& array);
 
   // Raw array where items are stored.
   T* items_{nullptr};
@@ -112,7 +111,7 @@ void swap(Array<T>& rhs, Array<T>& lhs) {
 
 // Public
 template <typename T>
-Array<T>::Array() : Array(kMinCapacity) {}
+Array<T>::Array() : Array(min_capacity) {}
 
 template <typename T>
 Array<T>::Array(size_t capacity) : capacity_(capacity) {
@@ -120,35 +119,35 @@ Array<T>::Array(size_t capacity) : capacity_(capacity) {
 }
 
 template <typename T>
-Array<T>::Array(std::initializer_list<T> il) : Array() {
+Array<T>::Array(std::initializer_list<T>&& il) : Array() {
   for (const T& t : il) {
-    Append(t);
+    append(t);
   }
 }
 
 template <typename T>
-Array<T>::Array(const Array<T>& array) {
-  DeepCopy(array);
+Array<T>::Array(const Array<T>& other) {
+  deep_copy(other);
 }
 
 template <typename T>
-Array<T>::Array(Array<T>&& array)
-    : items_(array.items_), size_(array.size_), capacity_(array.capacity_) {
-  array.items_ = nullptr;
+Array<T>::Array(Array<T>&& other)
+    : items_(other.items_), size_(other.size_), capacity_(other.capacity_) {
+  other.items_ = nullptr;
 }
 
 template <typename T>
-Array<T>& Array<T>::operator=(const Array<T>& array) {
-  Array<T> temp_array(array);
+Array<T>& Array<T>::operator=(const Array<T>& other) {
+  Array<T> temp_array(other);
   swap(*this, temp_array);
   return *this;
 }
 
 template <typename T>
-Array<T>& Array<T>::operator=(Array<T>&& array) {
+Array<T>& Array<T>::operator=(Array<T>&& other) {
   // Maybe shouldn't use |swap| method for move assignment operator
   // https://stackoverflow.com/questions/6687388/why-do-some-people-use-swap-for-move-assignments
-  Array<T> temp_array = std::move(array);
+  Array<T> temp_array = std::move(other);
   swap(*this, temp_array);
   return *this;
 }
@@ -159,39 +158,39 @@ Array<T>::~Array() {
 }
 
 template <typename T>
-size_t Array<T>::GetSize() {
+size_t Array<T>::size() {
   return size_;
 }
 
 template <typename T>
-size_t Array<T>::GetCapacity() {
+size_t Array<T>::capacity() {
   return capacity_;
 }
 
 template <typename T>
-bool Array<T>::IsEmpty() {
+bool Array<T>::is_empty() {
   return size_ == 0;
 }
 
 template <typename T>
-T Array<T>::GetItemAt(int index) {
-  ThrowIndexOutOfBoundsErrorIfNeeded(index);
+T Array<T>::item_at(int index) {
+  throw_out_of_range_error_if_needed(index);
 
   return items_[index];
 }
 
 template <typename T>
-void Array<T>::Append(const T& item) {
-  ReallocateIfNeeded(size_ + 1);
+void Array<T>::append(const T& item) {
+  reallocate_if_needed(size_ + 1);
 
   items_[size_] = item;
   size_++;
 }
 
 template <typename T>
-void Array<T>::Insert(const T& item, int index) {
-  ThrowIndexOutOfBoundsErrorIfNeeded(index);
-  ReallocateIfNeeded(size_ + 1);
+void Array<T>::insert(const T& item, int index) {
+  throw_out_of_range_error_if_needed(index);
+  reallocate_if_needed(size_ + 1);
 
   for (size_t i = size_; i > index; i--) {
     items_[i] = items_[i - 1];
@@ -202,59 +201,59 @@ void Array<T>::Insert(const T& item, int index) {
 }
 
 template <typename T>
-void Array<T>::Prepend(const T& item) {
-  Insert(item, 0);
+void Array<T>::prepend(const T& item) {
+  insert(item, 0);
 }
 
 template <typename T>
-T Array<T>::Pop() {
-  ThrowIndexOutOfBoundsErrorIfNeeded(0);
+T Array<T>::pop() {
+  throw_out_of_range_error_if_needed(0);
 
   T& last_item = items_[size_ - 1];
 
-  ReallocateIfNeeded(--size_);
+  reallocate_if_needed(--size_);
 
   return last_item;
 }
 
 template <typename T>
-void Array<T>::Delete(int index) {
-  ThrowIndexOutOfBoundsErrorIfNeeded(index);
+void Array<T>::remove_at(int index) {
+  throw_out_of_range_error_if_needed(index);
 
   for (size_t i = index; i < size_ - 1; i++) {
     items_[i] = items_[i + 1];
   }
 
-  ReallocateIfNeeded(--size_);
+  reallocate_if_needed(--size_);
 }
 
 template <typename T>
-void Array<T>::Remove(const T& item) {
+void Array<T>::remove(const T& item) {
   for (size_t i = 0; i < size_; i++) {
     if (items_[i] != item) {
       continue;
     }
 
-    Delete(i);
+    remove_at(i);
     i--;
   }
 }
 
 template <typename T>
-int Array<T>::Find(const T& item) {
+int Array<T>::find(const T& item) {
   for (size_t i = 0; i < size_; i++) {
     if (item == items_[i]) {
       return i;
     }
   }
 
-  return kIndexNotFound;
+  return index_not_found;
 }
 
 // Private
 template <typename T>
-void Array<T>::ThrowIndexOutOfBoundsErrorIfNeeded(int index) {
-  if (!IsEmpty() && index >= 0 && index < size_) {
+void Array<T>::throw_out_of_range_error_if_needed(int index) {
+  if (!is_empty() && index >= 0 && index < size_) {
     return;
   }
 
@@ -263,14 +262,14 @@ void Array<T>::ThrowIndexOutOfBoundsErrorIfNeeded(int index) {
 }
 
 template <typename T>
-void Array<T>::ReallocateIfNeeded(size_t new_size) {
+void Array<T>::reallocate_if_needed(size_t new_size) {
   size_t new_capacity = capacity_;
 
   if (new_size > capacity_) {
-    new_capacity *= kGrowthFactor;
-  } else if (new_size <= capacity_ / kShrinkFactor &&
-             capacity_ / kGrowthFactor >= kMinCapacity) {
-    new_capacity /= kGrowthFactor;
+    new_capacity *= growth_factor;
+  } else if (new_size <= capacity_ / shrink_factor &&
+             capacity_ / growth_factor >= min_capacity) {
+    new_capacity /= growth_factor;
   } else {
     return;
   }
@@ -288,7 +287,7 @@ void Array<T>::ReallocateIfNeeded(size_t new_size) {
 }
 
 template <typename T>
-void Array<T>::DeepCopy(const Array<T>& array) {
+void Array<T>::deep_copy(const Array<T>& array) {
   size_ = array.size_;
   capacity_ = array.capacity_;
 
@@ -302,4 +301,3 @@ void Array<T>::DeepCopy(const Array<T>& array) {
 
 }  // namespace td
 
-#endif  // CPP_DYNAMIC_ARRAY_H_

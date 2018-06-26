@@ -8,162 +8,162 @@ using namespace td;
 
 TEST(ArrayTest, DefaultConstructor) {
   Array<int> array;
-  EXPECT_EQ(0, array.GetSize());
-  EXPECT_EQ(16, array.GetCapacity());
+  EXPECT_EQ(0, array.size());
+  EXPECT_EQ(16, array.capacity());
 }
 
 TEST(ArrayTest, CapacityConstructor) {
   Array<int> array(30);
-  EXPECT_EQ(0, array.GetSize());
-  EXPECT_EQ(30, array.GetCapacity());
+  EXPECT_EQ(0, array.size());
+  EXPECT_EQ(30, array.capacity());
 }
 
 TEST(ArrayTest, InitializerListConstructor) {
   Array<int> array({0, 1, 2, 3, 4, 5});
-  EXPECT_EQ(6, array.GetSize());
-  EXPECT_EQ(16, array.GetCapacity());
+  EXPECT_EQ(6, array.size());
+  EXPECT_EQ(16, array.capacity());
 
   array =
       Array<int>({0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16});
-  EXPECT_EQ(17, array.GetSize());
-  EXPECT_EQ(32, array.GetCapacity());
+  EXPECT_EQ(17, array.size());
+  EXPECT_EQ(32, array.capacity());
 }
 
-TEST(ArrayTest, GetSize) {
+TEST(ArrayTest, Size) {
   Array<int> array({0, 1, 2});
-  EXPECT_EQ(3, array.GetSize());
+  EXPECT_EQ(3, array.size());
 
   array = Array<int>();
-  EXPECT_EQ(0, array.GetSize());
+  EXPECT_EQ(0, array.size());
 }
 
-TEST(ArrayTest, GetCapacity) {
+TEST(ArrayTest, Capacity) {
   Array<int> array({0, 1, 2});
-  EXPECT_EQ(16, array.GetCapacity());
+  EXPECT_EQ(16, array.capacity());
 
   array = Array<int>();
-  EXPECT_EQ(16, array.GetCapacity());
+  EXPECT_EQ(16, array.capacity());
 }
 
 TEST(ArrayTest, IsEmpty) {
   Array<int> array({0, 1, 2});
-  EXPECT_FALSE(array.IsEmpty());
+  EXPECT_FALSE(array.is_empty());
 
   array = Array<int>();
-  EXPECT_TRUE(array.IsEmpty());
+  EXPECT_TRUE(array.is_empty());
 }
 
-TEST(ArrayTest, GetItemAt) {
+TEST(ArrayTest, ItemAt) {
   Array<int> array;
-  EXPECT_THROW(array.GetItemAt(0), std::out_of_range);
-  EXPECT_THROW(array.GetItemAt(2), std::out_of_range);
+  EXPECT_THROW(array.item_at(0), std::out_of_range);
+  EXPECT_THROW(array.item_at(2), std::out_of_range);
 
   array = Array<int>({0, 1, 2});
-  EXPECT_EQ(0, array.GetItemAt(0));
-  EXPECT_EQ(1, array.GetItemAt(1));
-  EXPECT_EQ(2, array.GetItemAt(2));
+  EXPECT_EQ(0, array.item_at(0));
+  EXPECT_EQ(1, array.item_at(1));
+  EXPECT_EQ(2, array.item_at(2));
 }
 
 TEST(ArrayTest, Append) {
   Array<int> array =
       Array<int>({0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15});
-  array.Append(16);
+  array.append(16);
 
-  EXPECT_EQ(16, array.GetItemAt(16));
-  EXPECT_EQ(17, array.GetSize());
-  EXPECT_EQ(32, array.GetCapacity());
+  EXPECT_EQ(16, array.item_at(16));
+  EXPECT_EQ(17, array.size());
+  EXPECT_EQ(32, array.capacity());
 }
 
 TEST(ArrayTest, Insert) {
   Array<int> array =
       Array<int>({0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14});
-  EXPECT_THROW(array.Insert(0, 16), std::out_of_range);
+  EXPECT_THROW(array.insert(0, 16), std::out_of_range);
 
-  array.Insert(0, 0);
+  array.insert(0, 0);
 
-  EXPECT_EQ(0, array.GetItemAt(0));
-  EXPECT_EQ(16, array.GetSize());
-  EXPECT_EQ(16, array.GetCapacity());
+  EXPECT_EQ(0, array.item_at(0));
+  EXPECT_EQ(16, array.size());
+  EXPECT_EQ(16, array.capacity());
 
-  array.Insert(0, 15);
+  array.insert(0, 15);
 
-  EXPECT_EQ(0, array.GetItemAt(15));
-  EXPECT_EQ(14, array.GetItemAt(16));
-  EXPECT_EQ(17, array.GetSize());
-  EXPECT_EQ(32, array.GetCapacity());
+  EXPECT_EQ(0, array.item_at(15));
+  EXPECT_EQ(14, array.item_at(16));
+  EXPECT_EQ(17, array.size());
+  EXPECT_EQ(32, array.capacity());
 }
 
 TEST(ArrayTest, Prepend) {
   Array<int> array;
-  EXPECT_THROW(array.Prepend(0), std::out_of_range);
+  EXPECT_THROW(array.prepend(0), std::out_of_range);
 
   array = Array<int>({0, 1});
-  array.Prepend(-1);
-  EXPECT_EQ(-1, array.GetItemAt(0));
-  EXPECT_EQ(0, array.GetItemAt(1));
-  EXPECT_EQ(1, array.GetItemAt(2));
+  array.prepend(-1);
+  EXPECT_EQ(-1, array.item_at(0));
+  EXPECT_EQ(0, array.item_at(1));
+  EXPECT_EQ(1, array.item_at(2));
 }
 
 TEST(ArrayTest, Pop) {
   Array<int> array;
-  EXPECT_THROW(array.Pop(), std::out_of_range);
+  EXPECT_THROW(array.pop(), std::out_of_range);
 
   array =
       Array<int>({0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16});
-  EXPECT_EQ(16, array.Pop());
-  EXPECT_EQ(16, array.GetSize());
-  EXPECT_EQ(32, array.GetCapacity());
-  EXPECT_EQ(15, array.GetItemAt(15));
+  EXPECT_EQ(16, array.pop());
+  EXPECT_EQ(16, array.size());
+  EXPECT_EQ(32, array.capacity());
+  EXPECT_EQ(15, array.item_at(15));
 
-  array.Pop();
-  array.Pop();
-  array.Pop();
-  array.Pop();
-  array.Pop();
-  array.Pop();
-  array.Pop();
-  EXPECT_EQ(32, array.GetCapacity());
-  array.Pop();
-  EXPECT_EQ(16, array.GetCapacity());
+  array.pop();
+  array.pop();
+  array.pop();
+  array.pop();
+  array.pop();
+  array.pop();
+  array.pop();
+  EXPECT_EQ(32, array.capacity());
+  array.pop();
+  EXPECT_EQ(16, array.capacity());
 }
 
-TEST(ArrayTest, Delete) {
+TEST(ArrayTest, RemoveAt) {
   Array<int> array({0, 1, 2});
-  EXPECT_THROW(array.Delete(3), std::out_of_range);
+  EXPECT_THROW(array.remove_at(3), std::out_of_range);
 
-  array.Delete(0);
-  EXPECT_EQ(1, array.GetItemAt(0));
-  EXPECT_EQ(2, array.GetItemAt(1));
+  array.remove_at(0);
+  EXPECT_EQ(1, array.item_at(0));
+  EXPECT_EQ(2, array.item_at(1));
 
-  array.Delete(1);
-  EXPECT_EQ(1, array.GetItemAt(0));
+  array.remove_at(1);
+  EXPECT_EQ(1, array.item_at(0));
 
-  array.Delete(0);
-  EXPECT_TRUE(array.IsEmpty());
+  array.remove_at(0);
+  EXPECT_TRUE(array.is_empty());
 }
 
 TEST(ArrayTest, Remove) {
   Array<int> array({0, 1, 2});
 
-  array.Remove(-1);
-  EXPECT_EQ(3, array.GetSize());
-  EXPECT_EQ(0, array.GetItemAt(0));
-  EXPECT_EQ(1, array.GetItemAt(1));
-  EXPECT_EQ(2, array.GetItemAt(2));
+  array.remove(-1);
+  EXPECT_EQ(3, array.size());
+  EXPECT_EQ(0, array.item_at(0));
+  EXPECT_EQ(1, array.item_at(1));
+  EXPECT_EQ(2, array.item_at(2));
 
-  array.Remove(1);
-  EXPECT_EQ(2, array.GetSize());
-  EXPECT_EQ(0, array.GetItemAt(0));
-  EXPECT_EQ(2, array.GetItemAt(1));
+  array.remove(1);
+  EXPECT_EQ(2, array.size());
+  EXPECT_EQ(0, array.item_at(0));
+  EXPECT_EQ(2, array.item_at(1));
 }
 
 TEST(ArrayTest, Find) {
   Array<int> array({0, 1, 2});
 
-  EXPECT_EQ(kIndexNotFound, array.Find(-1));
-  EXPECT_EQ(0, array.Find(0));
-  EXPECT_EQ(1, array.Find(1));
-  EXPECT_EQ(2, array.Find(2));
+  EXPECT_EQ(index_not_found, array.find(-1));
+  EXPECT_EQ(0, array.find(0));
+  EXPECT_EQ(1, array.find(1));
+  EXPECT_EQ(2, array.find(2));
 }
 
 }

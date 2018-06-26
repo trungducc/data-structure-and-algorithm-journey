@@ -19,6 +19,11 @@ set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 add_subdirectory("${CMAKE_BINARY_DIR}/lib/googletest/src"
                  "${CMAKE_BINARY_DIR}/lib/googletest/build")
 
+add_definitions(-std=c++11)
+add_definitions(-Werror -Wunused-variable -Wunused-parameter -Wold-style-cast)
+
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_GLIBCXX_DEBUG")
+
 # Link targets against gtest, gmock,
 add_subdirectory(dynamic_array)
 # add_subdirectory(singly_linked_list)
