@@ -29,6 +29,15 @@ TEST(ArrayTest, InitializerListConstructor) {
   EXPECT_EQ(32, array.capacity());
 }
 
+TEST(ArrayTest, BracketOperator) {
+  Array<int> array({0, 1, 2, 3, 4, 5});
+  EXPECT_EQ(0, array[0]);
+  EXPECT_EQ(5, array[5]);
+
+  array[2] = 10;
+  EXPECT_EQ(10, array[2]);
+}
+
 TEST(ArrayTest, Size) {
   Array<int> array({0, 1, 2});
   EXPECT_EQ(3, array.size());
