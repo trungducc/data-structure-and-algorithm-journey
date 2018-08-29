@@ -73,9 +73,10 @@ class Array {
   friend void swap<T>(Array<T>& rhs, Array<T>& lsh);
 
  private:
-  // If |index| is a negative value or greater than
-  // |size_|, log an error and terminate program.
-  void throw_out_of_range_error_if_needed(int index);
+  // In case |index| is not a valid index, throw an exception
+  // and terminate program. If |inserted| is true, valid range
+  // is from 0 to |size_| + 1, otherwise it's from 0 to |size_|
+  void throw_out_of_range_error_if_needed(int index, bool inserted);
 
   // If |new_size| is equal or greater than |capacity_|, allocate
   // new array with double capacity. If |new_size| is equal or less
@@ -174,7 +175,7 @@ bool Array<T>::is_empty() {
 
 template <typename T>
 T Array<T>::item_at(int index) {
-  throw_out_of_range_error_if_needed(index);
+  throw_out_of_range_error_if_needed(index, false);
 
   return items_[index];
 }
@@ -188,7 +189,7 @@ void Array<T>::append(const T& item) {
 
 template <typename T>
 void Array<T>::insert(const T& item, int index) {
-  throw_out_of_range_error_if_needed(index);
+  throw_out_of_range_error_if_needed(index, true);
   reallocate_if_needed(size_ + 1);
 
   for (std::size_t i = size_; i > index; i--) {
@@ -206,7 +207,7 @@ void Array<T>::prepend(const T& item) {
 
 template <typename T>
 T Array<T>::pop() {
-  throw_out_of_range_error_if_needed(0);
+  throw_out_of_range_error_if_needed(0, false);
 
   T& last_item = items_[size_ - 1];
 
@@ -217,7 +218,7 @@ T Array<T>::pop() {
 
 template <typename T>
 void Array<T>::remove_at(int index) {
-  throw_out_of_range_error_if_needed(index);
+  throw_out_of_range_error_if_needed(index, false);
 
   for (std::size_t i = index; i < size_ - 1; i++) {
     items_[i] = items_[i + 1];
@@ -251,8 +252,9 @@ int Array<T>::find(const T& item) {
 
 // Private
 template <typename T>
-void Array<T>::throw_out_of_range_error_if_needed(int index) {
-  if (!is_empty() && index >= 0 && index < size_) {
+void Array<T>::throw_out_of_range_error_if_needed(int index, bool inserted) {
+  std::size_t size = inserted ? size_ + 1 : size_;
+  if (index >= 0 && index < size) {
     return;
   }
 
@@ -299,4 +301,3 @@ void Array<T>::deep_copy(const Array<T>& array) {
 }
 
 }  // namespace td
-

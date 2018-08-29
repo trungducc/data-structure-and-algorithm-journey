@@ -75,9 +75,15 @@ TEST(ArrayTest, Append) {
 }
 
 TEST(ArrayTest, Insert) {
-  Array<int> array =
-      Array<int>({0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14});
+  Array<int> array;
+  array.insert(1, 0);
+  EXPECT_EQ(1, array.item_at(0));
+
+  array = Array<int>({0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13});
   EXPECT_THROW(array.insert(0, 16), std::out_of_range);
+
+  array.insert(14, 14);
+  EXPECT_EQ(14, array.item_at(14));
 
   array.insert(0, 0);
 
@@ -95,13 +101,13 @@ TEST(ArrayTest, Insert) {
 
 TEST(ArrayTest, Prepend) {
   Array<int> array;
-  EXPECT_THROW(array.prepend(0), std::out_of_range);
 
-  array = Array<int>({0, 1});
+  array.prepend(0);
+  EXPECT_EQ(0, array.item_at(0));
+
   array.prepend(-1);
   EXPECT_EQ(-1, array.item_at(0));
   EXPECT_EQ(0, array.item_at(1));
-  EXPECT_EQ(1, array.item_at(2));
 }
 
 TEST(ArrayTest, Pop) {
@@ -165,5 +171,5 @@ TEST(ArrayTest, Find) {
   EXPECT_EQ(1, array.find(1));
   EXPECT_EQ(2, array.find(2));
 }
-
 }
+
