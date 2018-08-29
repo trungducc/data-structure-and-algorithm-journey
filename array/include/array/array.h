@@ -31,7 +31,7 @@ class Array {
   Array<T>& operator=(const Array<T>& other);
   Array<T>& operator=(Array<T>&& other);
 
-  T& operator[](unsigned int index);
+  T& operator[](std::size_t index);
 
   ~Array();
 
@@ -45,13 +45,13 @@ class Array {
   bool is_empty();
 
   // Return items at |index|.
-  T item_at(unsigned int index);
+  T item_at(std::size_t index);
 
   // Append |item| to the end of array.
   void append(const T& item);
 
   // Insert |item| at |index|.
-  void insert(const T& item, unsigned int index);
+  void insert(const T& item, std::size_t index);
 
   // Prepend |item| to the array.
   void prepend(const T& item);
@@ -60,14 +60,14 @@ class Array {
   T pop();
 
   // Remove item at |index|
-  void remove_at(unsigned int index);
+  void remove_at(std::size_t index);
 
   // Look for |item|, remove index holding it.
   void remove(const T& item);
 
   // Look for |item|, return first index with this
   // value, returns |kIndexNotFound| if not found
-  unsigned int find(const T& item);
+  std::size_t find(const T& item);
 
   // Swap values inside |first| and |second|.
   // Follow copy-and-swap idiom
@@ -78,7 +78,7 @@ class Array {
   // In case |index| is not a valid index, throw an exception
   // and terminate program. If |inserted| is true, valid range
   // is from 0 to |size_| + 1, otherwise it's from 0 to |size_|
-  void throw_out_of_range_error_if_needed(unsigned int index, bool inserted);
+  void throw_out_of_range_error_if_needed(std::size_t index, bool inserted);
 
   // If |new_size| is equal or greater than |capacity_|, allocate
   // new array with double capacity. If |new_size| is equal or less
@@ -156,7 +156,7 @@ Array<T>& Array<T>::operator=(Array<T>&& other) {
 }
 
 template <typename T>
-T& Array<T>::operator[](unsigned int index) {
+T& Array<T>::operator[](std::size_t index) {
   throw_out_of_range_error_if_needed(index, false);
   return items_[index];
 }
@@ -182,7 +182,7 @@ bool Array<T>::is_empty() {
 }
 
 template <typename T>
-T Array<T>::item_at(unsigned int index) {
+T Array<T>::item_at(std::size_t index) {
   throw_out_of_range_error_if_needed(index, false);
   return items_[index];
 }
@@ -195,7 +195,7 @@ void Array<T>::append(const T& item) {
 }
 
 template <typename T>
-void Array<T>::insert(const T& item, unsigned int index) {
+void Array<T>::insert(const T& item, std::size_t index) {
   throw_out_of_range_error_if_needed(index, true);
   reallocate_if_needed(size_ + 1);
 
@@ -224,7 +224,7 @@ T Array<T>::pop() {
 }
 
 template <typename T>
-void Array<T>::remove_at(unsigned int index) {
+void Array<T>::remove_at(std::size_t index) {
   throw_out_of_range_error_if_needed(index, false);
 
   for (std::size_t i = index; i < size_ - 1; i++) {
@@ -247,7 +247,7 @@ void Array<T>::remove(const T& item) {
 }
 
 template <typename T>
-unsigned int Array<T>::find(const T& item) {
+std::size_t Array<T>::find(const T& item) {
   for (std::size_t i = 0; i < size_; i++) {
     if (item == items_[i]) {
       return i;
@@ -259,7 +259,7 @@ unsigned int Array<T>::find(const T& item) {
 
 // Private
 template <typename T>
-void Array<T>::throw_out_of_range_error_if_needed(unsigned int index, bool inserted) {
+void Array<T>::throw_out_of_range_error_if_needed(std::size_t index, bool inserted) {
   std::size_t size = inserted ? size_ + 1 : size_;
   if (index < size) {
     return;
