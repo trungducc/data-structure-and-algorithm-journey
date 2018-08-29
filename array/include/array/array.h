@@ -22,7 +22,7 @@ template <typename T>
 class Array {
  public:
   Array();
-  Array(size_t capacity);
+  Array(std::size_t capacity);
   Array(std::initializer_list<T>&& il);
 
   Array(const Array<T>& other);
@@ -34,10 +34,10 @@ class Array {
   ~Array();
 
   // Return number of items are currently stored in array.
-  size_t size();
+  std::size_t size();
 
   // Return number of items it can hold.
-  size_t capacity();
+  std::size_t capacity();
 
   // Return array is empty or not.
   bool is_empty();
@@ -80,7 +80,7 @@ class Array {
   // If |new_size| is equal or greater than |capacity_|, allocate
   // new array with double capacity. If |new_size| is equal or less
   // than |capacity_| / 4, allocate new array with half of capacity.
-  void reallocate_if_needed(size_t new_size);
+  void reallocate_if_needed(std::size_t new_size);
 
   // Deep copy |items_| from |array|
   void deep_copy(const Array<T>& array);
@@ -89,10 +89,10 @@ class Array {
   T* items_{nullptr};
 
   // Number of items are currently stored in array.
-  size_t size_{0};
+  std::size_t size_{0};
 
   // Represent how many total items array can store without reallocation.
-  size_t capacity_{0};
+  std::size_t capacity_{0};
 };
 
 }  // namespace td
@@ -114,7 +114,7 @@ template <typename T>
 Array<T>::Array() : Array(min_capacity) {}
 
 template <typename T>
-Array<T>::Array(size_t capacity) : capacity_(capacity) {
+Array<T>::Array(std::size_t capacity) : capacity_(capacity) {
   items_ = new T[capacity_];
 }
 
@@ -158,12 +158,12 @@ Array<T>::~Array() {
 }
 
 template <typename T>
-size_t Array<T>::size() {
+std::size_t Array<T>::size() {
   return size_;
 }
 
 template <typename T>
-size_t Array<T>::capacity() {
+std::size_t Array<T>::capacity() {
   return capacity_;
 }
 
@@ -183,8 +183,7 @@ template <typename T>
 void Array<T>::append(const T& item) {
   reallocate_if_needed(size_ + 1);
 
-  items_[size_] = item;
-  size_++;
+  items_[size_++] = item;
 }
 
 template <typename T>
@@ -192,7 +191,7 @@ void Array<T>::insert(const T& item, int index) {
   throw_out_of_range_error_if_needed(index);
   reallocate_if_needed(size_ + 1);
 
-  for (size_t i = size_; i > index; i--) {
+  for (std::size_t i = size_; i > index; i--) {
     items_[i] = items_[i - 1];
   }
 
@@ -220,7 +219,7 @@ template <typename T>
 void Array<T>::remove_at(int index) {
   throw_out_of_range_error_if_needed(index);
 
-  for (size_t i = index; i < size_ - 1; i++) {
+  for (std::size_t i = index; i < size_ - 1; i++) {
     items_[i] = items_[i + 1];
   }
 
@@ -229,7 +228,7 @@ void Array<T>::remove_at(int index) {
 
 template <typename T>
 void Array<T>::remove(const T& item) {
-  for (size_t i = 0; i < size_; i++) {
+  for (std::size_t i = 0; i < size_; i++) {
     if (items_[i] != item) {
       continue;
     }
@@ -241,7 +240,7 @@ void Array<T>::remove(const T& item) {
 
 template <typename T>
 int Array<T>::find(const T& item) {
-  for (size_t i = 0; i < size_; i++) {
+  for (std::size_t i = 0; i < size_; i++) {
     if (item == items_[i]) {
       return i;
     }
@@ -263,7 +262,7 @@ void Array<T>::throw_out_of_range_error_if_needed(int index) {
 
 template <typename T>
 void Array<T>::reallocate_if_needed(size_t new_size) {
-  size_t new_capacity = capacity_;
+  std::size_t new_capacity = capacity_;
 
   if (new_size > capacity_) {
     new_capacity *= growth_factor;
@@ -276,7 +275,7 @@ void Array<T>::reallocate_if_needed(size_t new_size) {
 
   T* new_items = new T[new_capacity];
 
-  for (size_t i = 0; i < size_; i++) {
+  for (std::size_t i = 0; i < size_; i++) {
     new_items[i] = items_[i];
   }
 
@@ -294,7 +293,7 @@ void Array<T>::deep_copy(const Array<T>& array) {
   delete[] items_;
 
   items_ = new T[capacity_];
-  for (size_t i = 0; i < size_; i++) {
+  for (std::size_t i = 0; i < size_; i++) {
     items_[i] = array.items_[i];
   }
 }
