@@ -190,21 +190,19 @@ T Array<T>::item_at(std::size_t index) {
 template <typename T>
 void Array<T>::append(const T& item) {
   reallocate_if_needed(size_ + 1);
-
   items_[size_++] = item;
 }
 
 template <typename T>
 void Array<T>::insert(const T& item, std::size_t index) {
   throw_out_of_range_error_if_needed(index, true);
-  reallocate_if_needed(size_ + 1);
+  reallocate_if_needed(++size_);
 
-  for (std::size_t i = size_; i > index; i--) {
+  for (std::size_t i = size_ - 1; i > index; i--) {
     items_[i] = items_[i - 1];
   }
 
   items_[index] = item;
-  size_++;
 }
 
 template <typename T>
@@ -241,8 +239,7 @@ void Array<T>::remove(const T& item) {
       continue;
     }
 
-    remove_at(i);
-    i--;
+    remove_at(i--);
   }
 }
 
