@@ -15,7 +15,7 @@ template <typename T>
 class Array;
 
 template <typename T>
-void swap(Array<T>& rhs, Array<T>& lhs);
+void swap(Array<T>& lhs, Array<T>& rhs);
 
 // A dynamic array template
 template <typename T>
@@ -72,7 +72,7 @@ class Array {
   // Swap values inside |first| and |second|.
   // Follow copy-and-swap idiom
   // https://stackoverflow.com/questions/3279543/what-is-the-copy-and-swap-idiom
-  friend void swap<T>(Array<T>& rhs, Array<T>& lsh);
+  friend void swap<T>(Array<T>& lhs, Array<T>& rhs);
 
  private:
   // In case |index| is not a valid index, throw an exception
@@ -104,12 +104,12 @@ class Array {
 namespace td {
 
 template <typename T>
-void swap(Array<T>& rhs, Array<T>& lhs) {
+void swap(Array<T>& lhs, Array<T>& rhs) {
   using std::swap;
 
-  swap(rhs.size_, lhs.size_);
-  swap(rhs.capacity_, lhs.capacity_);
-  swap(rhs.items_, lhs.items_);
+  swap(lhs.size_, rhs.size_);
+  swap(lhs.capacity_, rhs.capacity_);
+  swap(lhs.items_, rhs.items_);
 }
 
 // Public
