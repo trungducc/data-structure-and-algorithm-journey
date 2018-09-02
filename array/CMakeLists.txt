@@ -1,14 +1,11 @@
-cmake_minimum_required(VERSION 3.11)
-
-include_directories(
-    "include/array"
-    "test"
-)
+# Set the project name
+project (array)
 
 # Add interface library
-add_library(array INTERFACE)
-target_include_directories(array INTERFACE
-    "${PROJECT_SOURCE_DIR}/include"
+add_library(${PROJECT_NAME} INTERFACE)
+target_include_directories(${PROJECT_NAME}
+    INTERFACE
+        "${PROJECT_SOURCE_DIR}/include"
 )
 
 # Add tests and link with libraries

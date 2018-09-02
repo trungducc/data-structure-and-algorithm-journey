@@ -1,5 +1,4 @@
-#include "array.h"
-
+#include "array/array.h"
 #include "gtest/gtest.h"
 
 namespace {
