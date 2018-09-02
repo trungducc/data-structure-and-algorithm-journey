@@ -198,7 +198,7 @@ void Array<T>::insert(const T& item, std::size_t index) {
   throw_out_of_range_error_if_needed(index, true);
   reallocate_if_needed(++size_);
 
-  for (std::size_t i = size_ - 1; i > index; i--) {
+  for (std::size_t i = size_ - 1; i > index; --i) {
     items_[i] = items_[i - 1];
   }
 
@@ -225,7 +225,7 @@ template <typename T>
 void Array<T>::remove_at(std::size_t index) {
   throw_out_of_range_error_if_needed(index, false);
 
-  for (std::size_t i = index; i < size_ - 1; i++) {
+  for (std::size_t i = index; i < size_ - 1; ++i) {
     items_[i] = items_[i + 1];
   }
 
@@ -234,7 +234,7 @@ void Array<T>::remove_at(std::size_t index) {
 
 template <typename T>
 void Array<T>::remove(const T& item) {
-  for (std::size_t i = 0; i < size_; i++) {
+  for (std::size_t i = 0; i < size_; ++i) {
     if (items_[i] != item) {
       continue;
     }
@@ -245,7 +245,7 @@ void Array<T>::remove(const T& item) {
 
 template <typename T>
 std::size_t Array<T>::find(const T& item) {
-  for (std::size_t i = 0; i < size_; i++) {
+  for (std::size_t i = 0; i < size_; ++i) {
     if (item == items_[i]) {
       return i;
     }
@@ -281,7 +281,7 @@ void Array<T>::reallocate_if_needed(std::size_t new_size) {
 
   T* new_items = new T[new_capacity];
 
-  for (std::size_t i = 0; i < size_; i++) {
+  for (std::size_t i = 0; i < size_; ++i) {
     new_items[i] = items_[i];
   }
 
@@ -299,7 +299,7 @@ void Array<T>::deep_copy(const Array<T>& array) {
   delete[] items_;
 
   items_ = new T[capacity_];
-  for (std::size_t i = 0; i < size_; i++) {
+  for (std::size_t i = 0; i < size_; ++i) {
     items_[i] = array.items_[i];
   }
 }
