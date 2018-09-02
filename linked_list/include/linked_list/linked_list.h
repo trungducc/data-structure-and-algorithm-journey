@@ -5,6 +5,13 @@
 namespace td {
 
 template <typename T>
+class LinkedList;
+
+template <typename T>
+void swap(LinkedList<T>& rhs, LinkedList<T>& lhs);
+
+// A linked list template
+template <typename T>
 class LinkedList {
  public:
   LinkedList() = default;
@@ -63,7 +70,7 @@ class LinkedList {
   void reverse();
 
   // Swap value inside |lhs| and |rhs|
-  friend void swap<T>(SLinkedList<T>& lhs, SLinkedList<T>& rhs);
+  friend void swap<T>(LinkedList<T>& lhs, LinkedList<T>& rhs);
 };
 
 }  // namespace td
