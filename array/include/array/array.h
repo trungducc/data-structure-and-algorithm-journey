@@ -213,11 +213,8 @@ void Array<T>::prepend(const T& item) {
 template <typename T>
 T Array<T>::pop() {
   throw_out_of_range_error_if_needed(0, false);
-
-  T& last_item = items_[size_ - 1];
-
-  reallocate_if_needed(--size_);
-
+  T& last_item = items_[--size_];
+  reallocate_if_needed(size_);
   return last_item;
 }
 
