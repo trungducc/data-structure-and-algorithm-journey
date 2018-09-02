@@ -38,13 +38,13 @@ class Array {
   // Return number of items are currently stored in array.
   std::size_t size();
 
-  // Return number of items it can hold.
+  // Return number of items array can hold.
   std::size_t capacity();
 
   // Return array is empty or not.
   bool is_empty();
 
-  // Return items at |index|.
+  // Return item at |index|.
   T item_at(std::size_t index);
 
   // Append |item| to the end of array.
@@ -62,7 +62,7 @@ class Array {
   // Remove item at |index|
   void remove_at(std::size_t index);
 
-  // Look for |item|, remove index holding it.
+  // Look for |item|, remove indexs holding it.
   void remove(const T& item);
 
   // Look for |item|, return first index with this
