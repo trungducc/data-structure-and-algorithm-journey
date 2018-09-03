@@ -100,7 +100,7 @@ class Array {
 
 }  // namespace td
 
-/****************  Array implmentation ****************/
+/****************  Array implementation ****************/
 namespace td {
 
 template <typename T>
