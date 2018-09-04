@@ -2,6 +2,8 @@
 
 #include <iostream>
 
+#include "utils/utils.h"
+
 namespace td {
 
 constexpr int min_capacity = 16;
@@ -75,11 +77,6 @@ class Array {
   friend void swap<T>(Array<T>& lhs, Array<T>& rhs);
 
  private:
-  // In case |index| is not a valid index, throw an exception
-  // and terminate program. If |inserted| is true, valid range
-  // is from 0 to |size_| + 1, otherwise it's from 0 to |size_|
-  void throw_out_of_range_error_if_needed(std::size_t index, bool inserted);
-
   // If |new_size| is equal or greater than |capacity_|, allocate
   // new array with double capacity. If |new_size| is equal or less
   // than |capacity_| / 4, allocate new array with half of capacity.
@@ -157,7 +154,7 @@ Array<T>& Array<T>::operator=(Array<T>&& other) {
 
 template <typename T>
 T& Array<T>::operator[](std::size_t index) {
-  throw_out_of_range_error_if_needed(index, false);
+  utils::validate(index, size_, utils::Action::kNone);
   return items_[index];
 }
 
@@ -183,7 +180,7 @@ bool Array<T>::is_empty() {
 
 template <typename T>
 T Array<T>::item_at(std::size_t index) {
-  throw_out_of_range_error_if_needed(index, false);
+  utils::validate(index, size_, utils::Action::kNone);
   return items_[index];
 }
 
@@ -195,7 +192,7 @@ void Array<T>::append(const T& item) {
 
 template <typename T>
 void Array<T>::insert(const T& item, std::size_t index) {
-  throw_out_of_range_error_if_needed(index, true);
+  utils::validate(index, size_, utils::Action::kInserted);
   reallocate_if_needed(++size_);
 
   for (std::size_t i = size_ - 1; i > index; --i) {
@@ -212,15 +209,18 @@ void Array<T>::prepend(const T& item) {
 
 template <typename T>
 T Array<T>::pop() {
-  throw_out_of_range_error_if_needed(0, false);
-  T& last_item = items_[--size_];
-  reallocate_if_needed(size_);
+  std::size_t last_index = size_ - 1;
+  utils::validate(last_index, size_, utils::Action::kRemoved);
+
+  T& last_item = items_[last_index];
+
+  reallocate_if_needed(--size_);
   return last_item;
 }
 
 template <typename T>
 void Array<T>::remove_at(std::size_t index) {
-  throw_out_of_range_error_if_needed(index, false);
+  utils::validate(index, size_, utils::Action::kRemoved);
 
   for (std::size_t i = index; i < size_ - 1; ++i) {
     items_[i] = items_[i + 1];
@@ -249,18 +249,6 @@ std::size_t Array<T>::find(const T& item) {
   }
 
   return index_not_found;
-}
-
-// Private
-template <typename T>
-void Array<T>::throw_out_of_range_error_if_needed(std::size_t index, bool inserted) {
-  std::size_t size = inserted ? size_ + 1 : size_;
-  if (index < size) {
-    return;
-  }
-
-  throw std::out_of_range("Index " + std::to_string(index) + " out of bounds " +
-                          std::to_string(size_) + ".");
 }
 
 template <typename T>

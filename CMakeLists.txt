@@ -25,4 +25,5 @@ add_definitions(-Werror -Wunused-variable -Wunused-parameter -Wold-style-cast)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_GLIBCXX_DEBUG")
 
 # Link targets against gtest, gmock,
+add_subdirectory(utils)
 add_subdirectory(array)
