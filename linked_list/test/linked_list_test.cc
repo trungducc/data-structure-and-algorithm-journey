@@ -1,5 +1,4 @@
-#include "linked_list.h"
-
+#include "linked_list/linked_list.h"
 #include "gtest/gtest.h"
 
 namespace {
@@ -14,6 +13,9 @@ TEST(LinkedListTest, SingleValueConstructor) {
   LinkedList<int> linked_list(0);
   EXPECT_EQ(1, linked_list.size());
   EXPECT_EQ(0, linked_list.value_at(0));
+
+  linked_list = LinkedList<int>(4);
+  EXPECT_EQ(4, linked_list.value_at(0));
 }
 
 TEST(LinkedListTest, InitializerListConstructor) {
@@ -47,9 +49,9 @@ TEST(LinkedListTest, MoveConstructor) {
 
   LinkedList<int> linked_list(std::move(tmp_linked_list));
   EXPECT_EQ(3, linked_list.size());
-  EXPECT_EQ(0, linked_list.value_at(1));
-  EXPECT_EQ(1, linked_list.value_at(2));
-  EXPECT_EQ(2, linked_list.value_at(3));
+  EXPECT_EQ(1, linked_list.value_at(0));
+  EXPECT_EQ(2, linked_list.value_at(1));
+  EXPECT_EQ(3, linked_list.value_at(2));
 
   EXPECT_EQ(0, tmp_linked_list.size());
 }
@@ -67,8 +69,8 @@ TEST(LinkedListTest, CopyOperator) {
 
   linked_list.remove_at(0);
   EXPECT_EQ(2, linked_list.size());
-  EXPECT_EQ(0, linked_list.value_at(1));
-  EXPECT_EQ(1, linked_list.value_at(2));
+  EXPECT_EQ(1, linked_list.value_at(0));
+  EXPECT_EQ(2, linked_list.value_at(1));
 
   EXPECT_EQ(3, tmp_linked_list.size());
   EXPECT_EQ(0, tmp_linked_list.value_at(0));
@@ -123,12 +125,12 @@ TEST(LinkedListTest, PushFront) {
   LinkedList<int> linked_list(2);
 
   linked_list.push_front(10);
-  EXPECT_EQ(0, linked_list.value_at(10));
-  EXPECT_EQ(1, linked_list.value_at(2));
+  EXPECT_EQ(10, linked_list.value_at(0));
+  EXPECT_EQ(2, linked_list.value_at(1));
 
   linked_list.push_front(1);
-  EXPECT_EQ(0, linked_list.value_at(1));
-  EXPECT_EQ(1, linked_list.value_at(10));
+  EXPECT_EQ(1, linked_list.value_at(0));
+  EXPECT_EQ(10, linked_list.value_at(1));
   EXPECT_EQ(2, linked_list.value_at(2));
 }
 
@@ -140,16 +142,16 @@ TEST(LinkedListTest, PopFront) {
 
   EXPECT_EQ(8, linked_list.pop_front());
   EXPECT_EQ(4, linked_list.size());
-  EXPECT_EQ(0, linked_list.value_at(7));
-  EXPECT_EQ(1, linked_list.value_at(2));
-  EXPECT_EQ(2, linked_list.value_at(4));
-  EXPECT_EQ(3, linked_list.value_at(6));
+  EXPECT_EQ(7, linked_list.value_at(0));
+  EXPECT_EQ(2, linked_list.value_at(1));
+  EXPECT_EQ(4, linked_list.value_at(2));
+  EXPECT_EQ(6, linked_list.value_at(3));
 
   EXPECT_EQ(7, linked_list.pop_front());
   EXPECT_EQ(2, linked_list.pop_front());
   EXPECT_EQ(2, linked_list.size());
-  EXPECT_EQ(0, linked_list.value_at(4));
-  EXPECT_EQ(1, linked_list.value_at(6));
+  EXPECT_EQ(4, linked_list.value_at(0));
+  EXPECT_EQ(6, linked_list.value_at(1));
 }
 
 TEST(LinkedListTest, PushBack) {
@@ -175,9 +177,9 @@ TEST(LinkedListTest, PopBack) {
 
   EXPECT_EQ(4, linked_list.pop_back());
   EXPECT_EQ(3, linked_list.size());
-  EXPECT_EQ(0, linked_list.value_at(1));
-  EXPECT_EQ(1, linked_list.value_at(2));
-  EXPECT_EQ(2, linked_list.value_at(3));
+  EXPECT_EQ(1, linked_list.value_at(0));
+  EXPECT_EQ(2, linked_list.value_at(1));
+  EXPECT_EQ(3, linked_list.value_at(2));
 
   EXPECT_EQ(3, linked_list.pop_back());
   EXPECT_EQ(2, linked_list.pop_back());
@@ -217,20 +219,20 @@ TEST(LinkedListTest, Insert) {
 
   linked_list.insert(10, 2);
   EXPECT_EQ(4, linked_list.size());
-  EXPECT_EQ(0, linked_list.value_at(1));
-  EXPECT_EQ(1, linked_list.value_at(2));
-  EXPECT_EQ(2, linked_list.value_at(10));
+  EXPECT_EQ(1, linked_list.value_at(0));
+  EXPECT_EQ(2, linked_list.value_at(1));
+  EXPECT_EQ(10, linked_list.value_at(2));
   EXPECT_EQ(3, linked_list.value_at(3));
 
   linked_list.insert(8, 2);
   linked_list.insert(0, 1);
   EXPECT_EQ(6, linked_list.size());
-  EXPECT_EQ(0, linked_list.value_at(1));
   EXPECT_EQ(1, linked_list.value_at(0));
+  EXPECT_EQ(0, linked_list.value_at(1));
   EXPECT_EQ(2, linked_list.value_at(2));
-  EXPECT_EQ(3, linked_list.value_at(8));
-  EXPECT_EQ(4, linked_list.value_at(10));
-  EXPECT_EQ(5, linked_list.value_at(3));
+  EXPECT_EQ(8, linked_list.value_at(3));
+  EXPECT_EQ(10, linked_list.value_at(4));
+  EXPECT_EQ(3, linked_list.value_at(5));
 }
 
 TEST(LinkedListTest, RemoveAt) {
@@ -238,16 +240,16 @@ TEST(LinkedListTest, RemoveAt) {
 
   linked_list.remove_at(1);
   EXPECT_EQ(4, linked_list.size());
-  EXPECT_EQ(0, linked_list.value_at(1));
-  EXPECT_EQ(1, linked_list.value_at(3));
-  EXPECT_EQ(2, linked_list.value_at(4));
-  EXPECT_EQ(3, linked_list.value_at(5));
+  EXPECT_EQ(1, linked_list.value_at(0));
+  EXPECT_EQ(3, linked_list.value_at(1));
+  EXPECT_EQ(4, linked_list.value_at(2));
+  EXPECT_EQ(5, linked_list.value_at(3));
 
   linked_list.remove_at(3);
   linked_list.remove_at(0);
   EXPECT_EQ(2, linked_list.size());
-  EXPECT_EQ(0, linked_list.value_at(3));
-  EXPECT_EQ(1, linked_list.value_at(4));
+  EXPECT_EQ(3, linked_list.value_at(0));
+  EXPECT_EQ(4, linked_list.value_at(1));
 
   EXPECT_THROW(linked_list.remove_at(3), std::out_of_range);
 }
@@ -257,10 +259,10 @@ TEST(LinkedListTest, Remove) {
 
   linked_list.remove(4);
   EXPECT_EQ(4, linked_list.size());
-  EXPECT_EQ(0, linked_list.value_at(1));
-  EXPECT_EQ(1, linked_list.value_at(2));
-  EXPECT_EQ(2, linked_list.value_at(3));
-  EXPECT_EQ(3, linked_list.value_at(5));
+  EXPECT_EQ(1, linked_list.value_at(0));
+  EXPECT_EQ(2, linked_list.value_at(1));
+  EXPECT_EQ(3, linked_list.value_at(2));
+  EXPECT_EQ(5, linked_list.value_at(3));
 
   linked_list.remove(2);
   linked_list.remove(5);

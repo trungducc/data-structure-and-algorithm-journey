@@ -6,8 +6,8 @@ namespace td {
 namespace utils {
 
 void validate(std::size_t index, std::size_t size, Action action) {
-  if (size == 0 && action == Action::kRemoved) {
-    throw std::out_of_range("Remove item from empty container");
+  if (size == 0 && action != Action::kInserted) {
+    throw std::out_of_range("Access to empty container.");
   }
 
   std::size_t range = action == Action::kInserted ? size + 1 : size;
