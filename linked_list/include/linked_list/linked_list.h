@@ -46,17 +46,16 @@ class LinkedList {
   // Add a node with |value| to the end of list.
   void push_back(const T& value);
 
-  // Remove end node and return its value.
+  // Remove last node and return its value.
   T pop_back();
 
   // Return value of front node.
   T front();
 
-  // Return value of end node.
+  // Return value of last node.
   T back();
 
   // Insert a node with |value| at |index|.
-  // New node will point to current node at |index|.
   void insert(const T& value, std::size_t index);
 
   // Remove node at given index.
@@ -178,11 +177,9 @@ T LinkedList<T>::value_at(std::size_t index) {
   utils::validate(index, size_, utils::Action::kNone);
 
   Node* target_node = head_;
-
   for (std::size_t i = 0; i < index; ++i) {
     target_node = target_node->next;
   }
-
   return target_node->data;
 }
 
@@ -199,11 +196,14 @@ template <typename T>
 T LinkedList<T>::pop_front() {
   utils::validate(0, size_, utils::Action::kRemoved);
 
+  // Get returned data
   Node* removed_node = head_;
   T data = removed_node->data;
 
+  // Remove first node
   head_ = head_->next;
 
+  // Clean up
   delete removed_node;
   --size_;
 
@@ -212,12 +212,13 @@ T LinkedList<T>::pop_front() {
 
 template <typename T>
 void LinkedList<T>::push_back(const T& value) {
+  // Get last node
   Node** pp_node = &head_;
-
   while (*pp_node) {
     pp_node = &(*pp_node)->next;
   }
 
+  // Add new node to the end of list
   *pp_node = new Node(value);
   ++size_;
 }
@@ -226,15 +227,20 @@ template <typename T>
 T LinkedList<T>::pop_back() {
   utils::validate(size_ - 1, size_, utils::Action::kRemoved);
 
+  // Get last node
   Node** pp_tail_node = &head_;
   while ((*pp_tail_node)->next) {
     pp_tail_node = &(*pp_tail_node)->next;
   }
   Node* tail_node = *pp_tail_node;
+
+  // Get returned data
   T data = tail_node->data;
 
+  // Remove last node
   *pp_tail_node = nullptr;
 
+  // Clean up
   delete tail_node;
   --size_;
 
@@ -255,14 +261,14 @@ template <typename T>
 void LinkedList<T>::insert(const T& value, std::size_t index) {
   utils::validate(index, size_, utils::Action::kInserted);
 
-  // Find pointer points to node at given index
+  // Find node at given index
   Node** pp_node = &head_;
   while (index > 0) {
     pp_node = &(*pp_node)->next;
     --index;
   }
 
-  // Create new node and make |pp_node| pointer points to it
+  // Insert new node to the list
   Node* new_node = new Node(value, *pp_node);
   *pp_node = new_node;
 
@@ -284,7 +290,7 @@ void LinkedList<T>::remove_at(std::size_t index) {
   // Remove node from list
   *pp_node = removed_node->next;
 
-  // Free removed node
+  // Clean up
   delete removed_node;
 
   --size_;
