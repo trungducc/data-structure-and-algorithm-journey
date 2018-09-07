@@ -194,7 +194,7 @@ void LinkedList<T>::push_front(const T& value) {
 
 template <typename T>
 T LinkedList<T>::pop_front() {
-  utils::validate(0, size_, utils::Action::kRemoved);
+  utils::validate(0, size_--, utils::Action::kRemoved);
 
   // Get returned data
   Node* removed_node = head_;
@@ -205,7 +205,6 @@ T LinkedList<T>::pop_front() {
 
   // Clean up
   delete removed_node;
-  --size_;
 
   return data;
 }
@@ -225,7 +224,8 @@ void LinkedList<T>::push_back(const T& value) {
 
 template <typename T>
 T LinkedList<T>::pop_back() {
-  utils::validate(size_ - 1, size_, utils::Action::kRemoved);
+  std::size_t last_index = size_ - 1;
+  utils::validate(last_index, size_--, utils::Action::kRemoved);
 
   // Get last node
   Node** pp_tail_node = &head_;
@@ -242,7 +242,6 @@ T LinkedList<T>::pop_back() {
 
   // Clean up
   delete tail_node;
-  --size_;
 
   return data;
 }
@@ -259,7 +258,7 @@ T LinkedList<T>::back() {
 
 template <typename T>
 void LinkedList<T>::insert(const T& value, std::size_t index) {
-  utils::validate(index, size_, utils::Action::kInserted);
+  utils::validate(index, size_++, utils::Action::kInserted);
 
   // Find node at given index
   Node** pp_node = &head_;
@@ -271,13 +270,11 @@ void LinkedList<T>::insert(const T& value, std::size_t index) {
   // Insert new node to the list
   Node* new_node = new Node(value, *pp_node);
   *pp_node = new_node;
-
-  ++size_;
 }
 
 template <typename T>
 void LinkedList<T>::remove_at(std::size_t index) {
-  utils::validate(index, size_, utils::Action::kRemoved);
+  utils::validate(index, size_--, utils::Action::kRemoved);
 
   // Find removed node
   Node** pp_node = &head_;
@@ -292,8 +289,6 @@ void LinkedList<T>::remove_at(std::size_t index) {
 
   // Clean up
   delete removed_node;
-
-  --size_;
 }
 
 template <typename T>
