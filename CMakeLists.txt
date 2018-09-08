@@ -27,3 +27,4 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_GLIBCXX_DEBUG")
 # Link targets against gtest, gmock,
 add_subdirectory(utils)
 add_subdirectory(array)
+add_subdirectory(linked_list)

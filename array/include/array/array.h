@@ -71,7 +71,7 @@ class Array {
   // value, returns |kIndexNotFound| if not found
   std::size_t find(const T& item);
 
-  // Swap values inside |first| and |second|.
+  // Swap values inside |lhs| and |rhs|.
   // Follow copy-and-swap idiom
   // https://stackoverflow.com/questions/3279543/what-is-the-copy-and-swap-idiom
   friend void swap<T>(Array<T>& lhs, Array<T>& rhs);
