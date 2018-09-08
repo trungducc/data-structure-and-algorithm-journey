@@ -39,6 +39,7 @@ class Queue {
 
   DISALLOW_COPY_AND_ASSIGN(Queue);
 };
+
 }  // namespace td
 
 /****************  Queue implementation ****************/
