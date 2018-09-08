@@ -13,9 +13,6 @@ class Queue {
   Queue() = default;
   ~Queue();
 
-  Queue(const Queue&) = delete;
-  Queue& operator=(const Queue&) = delete;
-
   // Determine queue is empty or not.
   bool is_empty();
 
@@ -39,6 +36,8 @@ class Queue {
   // The node which has |next| is the least recently-added element and 
   // |prev| is the most recently-added element
   Node* sentinel_{new Node()};
+
+  DISALLOW_COPY_AND_ASSIGN(Queue);
 };
 }  // namespace td
 
