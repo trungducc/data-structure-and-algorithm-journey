@@ -6,7 +6,7 @@
 
 namespace td {
 
-constexpr std::size_t kDefaultCapacity = 16;
+constexpr std::size_t default_capacity = 16;
 
 // Implemented queue by using array
 template <typename T>
@@ -51,7 +51,7 @@ class Queue {
 namespace td {
 
 template <typename T>
-Queue<T>::Queue() : Queue(kDefaultCapacity) {}
+Queue<T>::Queue() : Queue(default_capacity) {}
 
 template <typename T>
 Queue<T>::Queue(std::size_t capacity) : items_(new T[++capacity]), capacity_(capacity) {
