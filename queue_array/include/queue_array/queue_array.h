@@ -54,8 +54,8 @@ template <typename T>
 Queue<T>::Queue() : Queue(default_capacity) {}
 
 template <typename T>
-Queue<T>::Queue(std::size_t capacity) : items_(new T[++capacity]), capacity_(capacity) {
-}
+Queue<T>::Queue(std::size_t capacity)
+    : items_(new T[++capacity]), capacity_(capacity) {}
 
 template <typename T>
 Queue<T>::~Queue() {
@@ -79,7 +79,7 @@ void Queue<T>::enqueue(const T& value) {
   }
 
   items_[enqueue_index_] = value;
-  
+
   if (enqueue_index_ == capacity_ - 1) {
     enqueue_index_ = 0;
   } else {
