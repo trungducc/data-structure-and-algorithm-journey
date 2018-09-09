@@ -94,6 +94,7 @@ T Queue<T>::dequeue() {
   }
 
   T data = items_[dequeue_index_];
+  items_[dequeue_index_] = 0;
 
   if (dequeue_index_ == capacity_ - 1) {
     dequeue_index_ = 0;
