@@ -4,13 +4,9 @@
 
 #include "utils/utils.h"
 
-namespace {
+namespace td {
 
 constexpr std::size_t kDefaultCapacity = 16;
-
-}  // namespace
-
-namespace td {
 
 // Implemented queue by using array
 template <typename T>
