@@ -4,7 +4,7 @@
 namespace {
 using namespace td;
 
-TEST(QueueLinkedListTest, IsEmpty) {
+TEST(QueueArrayTest, IsEmpty) {
   Queue<int> queue;
   EXPECT_TRUE(queue.is_empty());
 
@@ -12,7 +12,7 @@ TEST(QueueLinkedListTest, IsEmpty) {
   EXPECT_FALSE(queue.is_empty());
 }
 
-TEST(QueueLinkedListTest, IsFull) {
+TEST(QueueArrayTest, IsFull) {
   Queue<int> queue(3);
   EXPECT_FALSE(queue.is_full());
 
@@ -26,7 +26,7 @@ TEST(QueueLinkedListTest, IsFull) {
   EXPECT_TRUE(queue.is_full());
 }
 
-TEST(QueueLinkedListTest, Enqueue) {
+TEST(QueueArrayTest, Enqueue) {
   Queue<int> queue(3);
 
   queue.enqueue(1);
@@ -39,7 +39,7 @@ TEST(QueueLinkedListTest, Enqueue) {
   EXPECT_TRUE(queue.is_empty());
 }
 
-TEST(QueueLinkedListTest, Dequeue) {
+TEST(QueueArrayTest, Dequeue) {
   Queue<int> queue(2);
 
   EXPECT_THROW(queue.dequeue(), std::out_of_range);
