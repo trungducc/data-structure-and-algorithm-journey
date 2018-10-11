@@ -14,13 +14,16 @@ std::size_t hash(const KeyType& key, std::size_t size);
 template <typename KeyType, typename ValueType>
 class HashTable {
  public:
+  HashTable() = default;
+  ~HashTable();
+
   // Add the given key and value to hash table. If key exists, replace old value with given value
   void set(const KeyType& key, const ValueType& value);
 
   // Returns value at given key. If key doesn't exist, return nullptr
   ValueType get(const KeyType& key);
 
-  // Removes value at given key
+  // Removes value at given key. If key doesn't exist, does nothing
   void remove(const KeyType& key);
 
  private:
