@@ -2,6 +2,7 @@
 
 #include <iostream>
 
+#include "utils/macros.h"
 #include "utils/utils.h"
 
 namespace td {

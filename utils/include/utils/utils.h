@@ -2,8 +2,6 @@
 
 #include <utility>
 
-#include "macros.h"
-
 namespace td {
 namespace utils {
 
