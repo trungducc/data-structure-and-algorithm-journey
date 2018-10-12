@@ -28,7 +28,8 @@ class HashTable {
   HashTable();
   ~HashTable();
 
-  // Add the given key and value to hash table. If key exists, replace old value with given value
+  // Add the given key and value to hash table. If key exists, replace old value
+  // with given value
   void set(const std::string& key, const ValueType& value);
 
   // Returns value at given key. If key doesn't exist, return value of null node
@@ -53,16 +54,18 @@ class HashTable {
     bool is_dummy();
   };
 
-  // Bases on given key to return a non-negative number smaller than given capacity
+  // Bases on given key to return a non-negative number smaller than given
+  // capacity
   std::size_t hash(const std::string& key, std::size_t capacity);
 
-  // Growth: If |new_size| is greater than |capacity_ * growth_factor|, allocate 
+  // Growth: If |new_size| is greater than |capacity_ * growth_factor|, allocate
   // |table_| with capacity is smallest prime which is greater or equal than
   // double current capacity.
-  // 
-  // Shink: If |new_size| is less than |capacity_ * shrink_factor|,  allocate 
+  //
+  // Shink: If |new_size| is less than |capacity_ * shrink_factor|,  allocate
   // |table_| with capacity is smallest prime which is greater or equal than
-  // half of current capacity (new capacity is always greater than default_capacity).
+  // half of current capacity (new capacity is always greater than
+  // default_capacity).
   void reallocate_if_needed(std::size_t new_size);
 
   // Represent size of |table_|, should be a prime
@@ -102,16 +105,18 @@ void HashTable<ValueType>::set(const std::string& key, const ValueType& value) {
     reallocate_if_needed(++size_);
 
   std::size_t hash_value = hash(key, capacity_);
-  while (!table_[hash_value].is_null() && !table_[hash_value].is_dummy() && table_[hash_value].key != key)
+  while (!table_[hash_value].is_null() && !table_[hash_value].is_dummy() &&
+         table_[hash_value].key != key)
     hash_value = (hash_value + 1) % capacity_;
-  
+
   table_[hash_value] = Node(key, value);
 }
 
 template <typename ValueType>
 ValueType HashTable<ValueType>::get(const std::string& key) {
   std::size_t hash_value = hash(key, capacity_);
-  while (table_[hash_value].is_dummy() || (!table_[hash_value].is_null() && table_[hash_value].key != key))
+  while (table_[hash_value].is_dummy() ||
+         (!table_[hash_value].is_null() && table_[hash_value].key != key))
     hash_value = (hash_value + 1) % capacity_;
   return table_[hash_value].value;
 }
@@ -122,7 +127,8 @@ void HashTable<ValueType>::remove(const std::string& key) {
     reallocate_if_needed(--size_);
 
   std::size_t hash_value = hash(key, capacity_);
-  while (table_[hash_value].is_dummy() || (!table_[hash_value].is_null() && table_[hash_value].key != key))
+  while (table_[hash_value].is_dummy() ||
+         (!table_[hash_value].is_null() && table_[hash_value].key != key))
     hash_value = (hash_value + 1) % capacity_;
 
   if (!table_[hash_value].is_null())
@@ -134,7 +140,8 @@ void HashTable<ValueType>::remove(const std::string& key) {
 // http://www.cse.yorku.ca/~oz/hash.html
 // djb2 algorithm
 template <typename ValueType>
-std::size_t HashTable<ValueType>::hash(const std::string& key, std::size_t capacity) {
+std::size_t HashTable<ValueType>::hash(const std::string& key,
+                                       std::size_t capacity) {
   unsigned long hash = 5381;
   for (std::size_t i = 0; i < key.length(); ++i)
     hash = hash * 33 + key[i];
@@ -154,8 +161,10 @@ void HashTable<ValueType>::reallocate_if_needed(std::size_t new_size) {
     return;
   }
 
-  // Does nothing if capacity doesn't change or it's less than |default_capacity|
-  if (new_capacity == capacity_ || new_capacity < default_capacity) return;
+  // Does nothing if capacity doesn't change or it's less than
+  // |default_capacity|
+  if (new_capacity == capacity_ || new_capacity < default_capacity)
+    return;
 
   // Allocate a table with new capacity and fill it with null nodes
   Node* new_table = new Node[new_capacity];
@@ -201,3 +210,4 @@ bool HashTable<ValueType>::Node::is_dummy() {
 }
 
 }  // namespace td
+
