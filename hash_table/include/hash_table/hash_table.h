@@ -123,8 +123,10 @@ ValueType HashTable<ValueType>::get(const std::string& key) {
 
 template <typename ValueType>
 void HashTable<ValueType>::remove(const std::string& key) {
-  if (get(key) != null_node_value)
-    reallocate_if_needed(--size_);
+  if (get(key) == null_node_value)
+    return;
+
+  reallocate_if_needed(--size_);
 
   std::size_t hash_value = hash(key, capacity_);
   while (table_[hash_value].is_dummy() ||
