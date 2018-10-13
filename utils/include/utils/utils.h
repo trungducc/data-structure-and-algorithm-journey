@@ -29,7 +29,7 @@ void validate(std::size_t index, std::size_t size, Action action);
 // Returns true if given number is a prime number. Otherwise, return false
 bool is_prime(unsigned long long number);
 
-// Returns smallest prime number which is bigger than given number.
+// Returns smallest prime number which is equal or greater than given number.
 unsigned long long next_prime(unsigned long long number);
 
 }  // namespace utils

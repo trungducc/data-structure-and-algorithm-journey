@@ -123,7 +123,7 @@ ValueType HashTable<ValueType>::get(const std::string& key) {
 
 template <typename ValueType>
 void HashTable<ValueType>::remove(const std::string& key) {
-  if (get(key) == null_node_value)
+  if (get(key) != null_node_value)
     reallocate_if_needed(--size_);
 
   std::size_t hash_value = hash(key, capacity_);
@@ -157,13 +157,13 @@ void HashTable<ValueType>::reallocate_if_needed(std::size_t new_size) {
     new_capacity = utils::next_prime(capacity_ * 2);
   } else if (new_size < capacity_ * shrink_factor) {
     new_capacity = utils::next_prime(capacity_ / 2);
+    new_capacity = new_capacity > default_capacity ? new_capacity : default_capacity;
   } else {
     return;
   }
 
-  // Does nothing if capacity doesn't change or it's less than
-  // |default_capacity|
-  if (new_capacity == capacity_ || new_capacity < default_capacity)
+  // Does nothing if capacity doesn't change
+  if (new_capacity == capacity_)
     return;
 
   // Allocate a table with new capacity and fill it with null nodes
