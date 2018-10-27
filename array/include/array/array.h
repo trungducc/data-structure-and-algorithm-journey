@@ -13,27 +13,27 @@ constexpr int shrink_factor = 4;
 
 constexpr int index_not_found = -1;
 
-template <typename T>
+template <typename ItemType>
 class Array;
 
-template <typename T>
-void swap(Array<T>& lhs, Array<T>& rhs);
+template <typename ItemType>
+void swap(Array<ItemType>& lhs, Array<ItemType>& rhs);
 
 // A dynamic array template
-template <typename T>
+template <typename ItemType>
 class Array {
  public:
   Array();
   Array(std::size_t capacity);
-  Array(std::initializer_list<T>&& il);
+  Array(std::initializer_list<ItemType>&& il);
 
-  Array(const Array<T>& other);
-  Array(Array<T>&& other);
+  Array(const Array<ItemType>& other);
+  Array(Array<ItemType>&& other);
 
-  Array<T>& operator=(const Array<T>& other);
-  Array<T>& operator=(Array<T>&& other);
+  Array<ItemType>& operator=(const Array<ItemType>& other);
+  Array<ItemType>& operator=(Array<ItemType>&& other);
 
-  T& operator[](std::size_t index);
+  ItemType& operator[](std::size_t index);
 
   ~Array();
 
@@ -47,34 +47,34 @@ class Array {
   bool is_empty();
 
   // Return item at |index|.
-  T item_at(std::size_t index);
+  ItemType item_at(std::size_t index);
 
   // Append |item| to the end of array.
-  void append(const T& item);
+  void append(const ItemType& item);
 
   // Insert |item| at |index|.
-  void insert(const T& item, std::size_t index);
+  void insert(const ItemType& item, std::size_t index);
 
   // Prepend |item| to the array.
-  void prepend(const T& item);
+  void prepend(const ItemType& item);
 
   // Remove last item and return it.
-  T pop();
+  ItemType pop();
 
   // Remove item at |index|
   void remove_at(std::size_t index);
 
   // Look for |item|, remove indexs holding it.
-  void remove(const T& item);
+  void remove(const ItemType& item);
 
   // Look for |item|, return first index with this
   // value, returns |kIndexNotFound| if not found
-  std::size_t find(const T& item);
+  std::size_t find(const ItemType& item);
 
   // Swap values inside |lhs| and |rhs|.
   // Follow copy-and-swap idiom
   // https://stackoverflow.com/questions/3279543/what-is-the-copy-and-swap-idiom
-  friend void swap<T>(Array<T>& lhs, Array<T>& rhs);
+  friend void swap<ItemType>(Array<ItemType>& lhs, Array<ItemType>& rhs);
 
  private:
   // If |new_size| is equal or greater than |capacity_|, allocate
@@ -83,10 +83,10 @@ class Array {
   void reallocate_if_needed(std::size_t new_size);
 
   // Deep copy |items_| from |array|
-  void deep_copy(const Array<T>& array);
+  void deep_copy(const Array<ItemType>& array);
 
   // Raw array where items are stored.
-  T* items_{nullptr};
+  ItemType* items_{nullptr};
 
   // Number of items are currently stored in array.
   std::size_t size_{0};
@@ -100,8 +100,8 @@ class Array {
 /****************  Array implementation ****************/
 namespace td {
 
-template <typename T>
-void swap(Array<T>& lhs, Array<T>& rhs) {
+template <typename ItemType>
+void swap(Array<ItemType>& lhs, Array<ItemType>& rhs) {
   using std::swap;
 
   swap(lhs.size_, rhs.size_);
@@ -110,88 +110,88 @@ void swap(Array<T>& lhs, Array<T>& rhs) {
 }
 
 // Public
-template <typename T>
-Array<T>::Array() : Array(min_capacity) {}
+template <typename ItemType>
+Array<ItemType>::Array() : Array(min_capacity) {}
 
-template <typename T>
-Array<T>::Array(std::size_t capacity) : capacity_(capacity) {
-  items_ = new T[capacity_];
+template <typename ItemType>
+Array<ItemType>::Array(std::size_t capacity) : capacity_(capacity) {
+  items_ = new ItemType[capacity_];
 }
 
-template <typename T>
-Array<T>::Array(std::initializer_list<T>&& il) : Array() {
-  for (const T& t : il) {
-    append(t);
+template <typename ItemType>
+Array<ItemType>::Array(std::initializer_list<ItemType>&& il) : Array() {
+  for (const ItemType& data : il) {
+    append(data);
   }
 }
 
-template <typename T>
-Array<T>::Array(const Array<T>& other) {
+template <typename ItemType>
+Array<ItemType>::Array(const Array<ItemType>& other) {
   deep_copy(other);
 }
 
-template <typename T>
-Array<T>::Array(Array<T>&& other)
+template <typename ItemType>
+Array<ItemType>::Array(Array<ItemType>&& other)
     : items_(other.items_), size_(other.size_), capacity_(other.capacity_) {
   other.items_ = nullptr;
 }
 
-template <typename T>
-Array<T>& Array<T>::operator=(const Array<T>& other) {
-  Array<T> temp_array(other);
+template <typename ItemType>
+Array<ItemType>& Array<ItemType>::operator=(const Array<ItemType>& other) {
+  Array<ItemType> temp_array(other);
   swap(*this, temp_array);
   return *this;
 }
 
-template <typename T>
-Array<T>& Array<T>::operator=(Array<T>&& other) {
+template <typename ItemType>
+Array<ItemType>& Array<ItemType>::operator=(Array<ItemType>&& other) {
   // Maybe shouldn't use |swap| method for move assignment operator
   // https://stackoverflow.com/questions/6687388/why-do-some-people-use-swap-for-move-assignments
-  Array<T> temp_array = std::move(other);
+  Array<ItemType> temp_array = std::move(other);
   swap(*this, temp_array);
   return *this;
 }
 
-template <typename T>
-T& Array<T>::operator[](std::size_t index) {
+template <typename ItemType>
+ItemType& Array<ItemType>::operator[](std::size_t index) {
   utils::validate(index, size_, utils::Action::kNone);
   return items_[index];
 }
 
-template <typename T>
-Array<T>::~Array() {
+template <typename ItemType>
+Array<ItemType>::~Array() {
   delete[] items_;
 }
 
-template <typename T>
-std::size_t Array<T>::size() {
+template <typename ItemType>
+std::size_t Array<ItemType>::size() {
   return size_;
 }
 
-template <typename T>
-std::size_t Array<T>::capacity() {
+template <typename ItemType>
+std::size_t Array<ItemType>::capacity() {
   return capacity_;
 }
 
-template <typename T>
-bool Array<T>::is_empty() {
+template <typename ItemType>
+bool Array<ItemType>::is_empty() {
   return size_ == 0;
 }
 
-template <typename T>
-T Array<T>::item_at(std::size_t index) {
+template <typename ItemType>
+ItemType Array<ItemType>::item_at(std::size_t index) {
   utils::validate(index, size_, utils::Action::kNone);
   return items_[index];
 }
 
-template <typename T>
-void Array<T>::append(const T& item) {
+template <typename ItemType>
+void Array<ItemType>::append(const ItemType& item) {
   reallocate_if_needed(size_ + 1);
   items_[size_++] = item;
 }
 
-template <typename T>
-void Array<T>::insert(const T& item, std::size_t index) {
+template <typename ItemType>
+void Array<ItemType>::insert(const ItemType& item, std::size_t index) {
   utils::validate(index, size_, utils::Action::kInserted);
   reallocate_if_needed(++size_);
 
@@ -202,24 +202,24 @@ void Array<T>::insert(const T& item, std::size_t index) {
   items_[index] = item;
 }
 
-template <typename T>
-void Array<T>::prepend(const T& item) {
+template <typename ItemType>
+void Array<ItemType>::prepend(const ItemType& item) {
   insert(item, 0);
 }
 
-template <typename T>
-T Array<T>::pop() {
+template <typename ItemType>
+ItemType Array<ItemType>::pop() {
   std::size_t last_index = size_ - 1;
   utils::validate(last_index, size_, utils::Action::kRemoved);
 
-  T& last_item = items_[last_index];
+  ItemType& last_item = items_[last_index];
 
   reallocate_if_needed(--size_);
   return last_item;
 }
 
-template <typename T>
-void Array<T>::remove_at(std::size_t index) {
+template <typename ItemType>
+void Array<ItemType>::remove_at(std::size_t index) {
   utils::validate(index, size_, utils::Action::kRemoved);
 
   for (std::size_t i = index; i < size_ - 1; ++i) {
@@ -229,8 +229,8 @@ void Array<T>::remove_at(std::size_t index) {
   reallocate_if_needed(--size_);
 }
 
-template <typename T>
-void Array<T>::remove(const T& item) {
+template <typename ItemType>
+void Array<ItemType>::remove(const ItemType& item) {
   for (std::size_t i = 0; i < size_; ++i) {
     if (items_[i] != item) {
       continue;
@@ -240,8 +240,8 @@ void Array<T>::remove(const T& item) {
   }
 }
 
-template <typename T>
-std::size_t Array<T>::find(const T& item) {
+template <typename ItemType>
+std::size_t Array<ItemType>::find(const ItemType& item) {
   for (std::size_t i = 0; i < size_; ++i) {
     if (item == items_[i]) {
       return i;
@@ -251,8 +251,8 @@ std::size_t Array<T>::find(const T& item) {
   return index_not_found;
 }
 
-template <typename T>
-void Array<T>::reallocate_if_needed(std::size_t new_size) {
+template <typename ItemType>
+void Array<ItemType>::reallocate_if_needed(std::size_t new_size) {
   std::size_t new_capacity = capacity_;
 
   if (new_size > capacity_) {
@@ -264,7 +264,7 @@ void Array<T>::reallocate_if_needed(std::size_t new_size) {
     return;
   }
 
-  T* new_items = new T[new_capacity];
+  ItemType* new_items = new ItemType[new_capacity];
 
   for (std::size_t i = 0; i < size_; ++i) {
     new_items[i] = items_[i];
@@ -276,14 +276,14 @@ void Array<T>::reallocate_if_needed(std::size_t new_size) {
   capacity_ = new_capacity;
 }
 
-template <typename T>
-void Array<T>::deep_copy(const Array<T>& array) {
+template <typename ItemType>
+void Array<ItemType>::deep_copy(const Array<ItemType>& array) {
   size_ = array.size_;
   capacity_ = array.capacity_;
 
   delete[] items_;
 
-  items_ = new T[capacity_];
+  items_ = new ItemType[capacity_];
   for (std::size_t i = 0; i < size_; ++i) {
     items_[i] = array.items_[i];
   }

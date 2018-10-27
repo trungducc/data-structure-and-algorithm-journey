@@ -6,25 +6,25 @@
 
 namespace td {
 
-template <typename T>
+template <typename DataType>
 class LinkedList;
 
-template <typename T>
-void swap(LinkedList<T>& rhs, LinkedList<T>& lhs);
+template <typename DataType>
+void swap(LinkedList<DataType>& rhs, LinkedList<DataType>& lhs);
 
 // A linked list template
-template <typename T>
+template <typename DataType>
 class LinkedList {
  public:
   LinkedList() = default;
-  LinkedList(const T& value);
-  LinkedList(std::initializer_list<T> il);
+  LinkedList(const DataType& value);
+  LinkedList(std::initializer_list<DataType> il);
 
-  LinkedList(const LinkedList<T>& other);
-  LinkedList(LinkedList<T>&& other);
+  LinkedList(const LinkedList<DataType>& other);
+  LinkedList(LinkedList<DataType>&& other);
 
-  LinkedList<T>& operator=(const LinkedList<T>& other);
-  LinkedList<T>& operator=(LinkedList<T>&& other);
+  LinkedList<DataType>& operator=(const LinkedList<DataType>& other);
+  LinkedList<DataType>& operator=(LinkedList<DataType>&& other);
 
   ~LinkedList();
 
@@ -35,37 +35,37 @@ class LinkedList {
   bool is_empty();
 
   // Return value of node at given index.
-  T value_at(std::size_t index);
+  DataType value_at(std::size_t index);
 
   // Add a node with |value| to the front of list.
-  void push_front(const T& value);
+  void push_front(const DataType& value);
 
   // Remove front node and return its value.
-  T pop_front();
+  DataType pop_front();
 
   // Add a node with |value| to the end of list.
-  void push_back(const T& value);
+  void push_back(const DataType& value);
 
   // Remove last node and return its value.
-  T pop_back();
+  DataType pop_back();
 
   // Return value of front node.
-  T front();
+  DataType front();
 
   // Return value of last node.
-  T back();
+  DataType back();
 
   // Insert a node with |value| at |index|.
-  void insert(const T& value, std::size_t index);
+  void insert(const DataType& value, std::size_t index);
 
   // Remove node at given index.
   void remove_at(std::size_t index);
 
   // Remove first node in list with given value.
-  void remove(const T& value);
+  void remove(const DataType& value);
 
   // Return value of node at |index| from the end of list.
-  T value_from_back(std::size_t index);
+  DataType value_from_back(std::size_t index);
 
   // Reverse list
   void reverse();
@@ -73,16 +73,17 @@ class LinkedList {
   // Swap values inside |lhs| and |rhs|.
   // Follow copy-and-swap idiom
   // https://stackoverflow.com/questions/3279543/what-is-the-copy-and-swap-idiom
-  friend void swap<T>(LinkedList<T>& lhs, LinkedList<T>& rhs);
+  friend void swap<DataType>(LinkedList<DataType>& lhs,
+                             LinkedList<DataType>& rhs);
 
  private:
   // Node's data type
   struct Node {
-    T data;
+    DataType data;
     Node* next{nullptr};
 
-    Node(const T& t) : data(t) {}
-    Node(const T& t, Node* n) : data(t), next(n) {}
+    Node(const DataType& d) : data(d) {}
+    Node(const DataType& d, Node* n) : data(d), next(n) {}
   };
 
   // Pointer points to the first node in list.
@@ -100,8 +101,8 @@ class LinkedList {
 /****************  Linked List implmentation ****************/
 namespace td {
 
-template <typename T>
-void swap(LinkedList<T>& lhs, LinkedList<T>& rhs) {
+template <typename DataType>
+void swap(LinkedList<DataType>& lhs, LinkedList<DataType>& rhs) {
   using std::swap;
 
   swap(lhs.head_, rhs.head_);
@@ -109,18 +110,20 @@ void swap(LinkedList<T>& lhs, LinkedList<T>& rhs) {
 }
 
 // Public
-template <typename T>
-LinkedList<T>::LinkedList(const T& value) : head_(new Node(value)), size_(1) {}
+template <typename DataType>
+LinkedList<DataType>::LinkedList(const DataType& value)
+    : head_(new Node(value)), size_(1) {}
 
-template <typename T>
-LinkedList<T>::LinkedList(std::initializer_list<T> il) {
+template <typename DataType>
+LinkedList<DataType>::LinkedList(std::initializer_list<DataType> il) {
   for (int i = il.size() - 1; i >= 0; --i) {
     push_front(il.begin()[i]);
   }
 }
 
-template <typename T>
-LinkedList<T>::LinkedList(const LinkedList<T>& other) : size_(other.size_) {
+template <typename DataType>
+LinkedList<DataType>::LinkedList(const LinkedList<DataType>& other)
+    : size_(other.size_) {
   release_head();
 
   Node* other_head = other.head_;
@@ -133,47 +136,49 @@ LinkedList<T>::LinkedList(const LinkedList<T>& other) : size_(other.size_) {
   }
 }
 
-template <typename T>
-LinkedList<T>::LinkedList(LinkedList<T>&& other)
+template <typename DataType>
+LinkedList<DataType>::LinkedList(LinkedList<DataType>&& other)
     : head_(other.head_), size_(other.size_) {
   other.head_ = nullptr;
   other.size_ = 0;
 }
 
-template <typename T>
-LinkedList<T>& LinkedList<T>::operator=(const LinkedList<T>& other) {
-  LinkedList<T> temp(other);
+template <typename DataType>
+LinkedList<DataType>& LinkedList<DataType>::operator=(
+    const LinkedList<DataType>& other) {
+  LinkedList<DataType> temp(other);
   swap(*this, temp);
   return *this;
 }
 
-template <typename T>
-LinkedList<T>& LinkedList<T>::operator=(LinkedList<T>&& other) {
+template <typename DataType>
+LinkedList<DataType>& LinkedList<DataType>::operator=(
+    LinkedList<DataType>&& other) {
   // Maybe shouldn't use |swap| method for move assignment operator
   // https://stackoverflow.com/questions/6687388/why-do-some-people-use-swap-for-move-assignments
-  LinkedList<T> temp = std::move(other);
+  LinkedList<DataType> temp = std::move(other);
   swap(*this, temp);
   return *this;
 }
 
-template <typename T>
-LinkedList<T>::~LinkedList() {
+template <typename DataType>
+LinkedList<DataType>::~LinkedList() {
   size_ = 0;
   release_head();
 }
 
-template <typename T>
-std::size_t LinkedList<T>::size() {
+template <typename DataType>
+std::size_t LinkedList<DataType>::size() {
   return size_;
 }
 
-template <typename T>
-bool LinkedList<T>::is_empty() {
+template <typename DataType>
+bool LinkedList<DataType>::is_empty() {
   return size_ == 0;
 }
 
-template <typename T>
-T LinkedList<T>::value_at(std::size_t index) {
+template <typename DataType>
+DataType LinkedList<DataType>::value_at(std::size_t index) {
   utils::validate(index, size_, utils::Action::kNone);
 
   Node* target_node = head_;
@@ -183,8 +188,8 @@ T LinkedList<T>::value_at(std::size_t index) {
   return target_node->data;
 }
 
-template <typename T>
-void LinkedList<T>::push_front(const T& value) {
+template <typename DataType>
+void LinkedList<DataType>::push_front(const DataType& value) {
   ++size_;
 
   Node* current_head = head_;
@@ -192,13 +197,13 @@ void LinkedList<T>::push_front(const T& value) {
   head_->next = current_head;
 }
 
-template <typename T>
-T LinkedList<T>::pop_front() {
+template <typename DataType>
+DataType LinkedList<DataType>::pop_front() {
   utils::validate(0, size_--, utils::Action::kRemoved);
 
   // Get returned data
   Node* removed_node = head_;
-  T data = removed_node->data;
+  DataType data = removed_node->data;
 
   // Remove first node
   head_ = head_->next;
@@ -209,8 +214,8 @@ T LinkedList<T>::pop_front() {
   return data;
 }
 
-template <typename T>
-void LinkedList<T>::push_back(const T& value) {
+template <typename DataType>
+void LinkedList<DataType>::push_back(const DataType& value) {
   // Get last node
   Node** pp_node = &head_;
   while (*pp_node) {
@@ -222,8 +227,8 @@ void LinkedList<T>::push_back(const T& value) {
   ++size_;
 }
 
-template <typename T>
-T LinkedList<T>::pop_back() {
+template <typename DataType>
+DataType LinkedList<DataType>::pop_back() {
   std::size_t last_index = size_ - 1;
   utils::validate(last_index, size_--, utils::Action::kRemoved);
 
@@ -235,7 +240,7 @@ T LinkedList<T>::pop_back() {
   Node* tail_node = *pp_tail_node;
 
   // Get returned data
-  T data = tail_node->data;
+  DataType data = tail_node->data;
 
   // Remove last node
   *pp_tail_node = nullptr;
@@ -246,18 +251,18 @@ T LinkedList<T>::pop_back() {
   return data;
 }
 
-template <typename T>
-T LinkedList<T>::front() {
+template <typename DataType>
+DataType LinkedList<DataType>::front() {
   return value_at(0);
 }
 
-template <typename T>
-T LinkedList<T>::back() {
+template <typename DataType>
+DataType LinkedList<DataType>::back() {
   return value_at(size_ - 1);
 }
 
-template <typename T>
-void LinkedList<T>::insert(const T& value, std::size_t index) {
+template <typename DataType>
+void LinkedList<DataType>::insert(const DataType& value, std::size_t index) {
   utils::validate(index, size_++, utils::Action::kInserted);
 
   // Find node at given index
@@ -272,8 +277,8 @@ void LinkedList<T>::insert(const T& value, std::size_t index) {
   *pp_node = new_node;
 }
 
-template <typename T>
-void LinkedList<T>::remove_at(std::size_t index) {
+template <typename DataType>
+void LinkedList<DataType>::remove_at(std::size_t index) {
   utils::validate(index, size_--, utils::Action::kRemoved);
 
   // Find removed node
@@ -291,8 +296,8 @@ void LinkedList<T>::remove_at(std::size_t index) {
   delete removed_node;
 }
 
-template <typename T>
-void LinkedList<T>::remove(const T& value) {
+template <typename DataType>
+void LinkedList<DataType>::remove(const DataType& value) {
   Node** pp_node = &head_;
 
   while (*pp_node) {
@@ -308,14 +313,14 @@ void LinkedList<T>::remove(const T& value) {
   }
 }
 
-template <typename T>
-T LinkedList<T>::value_from_back(std::size_t index) {
+template <typename DataType>
+DataType LinkedList<DataType>::value_from_back(std::size_t index) {
   std::size_t index_from_front = size_ - index - 1;
   return value_at(index_from_front);
 }
 
-template <typename T>
-void LinkedList<T>::reverse() {
+template <typename DataType>
+void LinkedList<DataType>::reverse() {
   Node* curr_node = head_;
   Node* prev_node = nullptr;
   Node* next_node = nullptr;
@@ -331,8 +336,8 @@ void LinkedList<T>::reverse() {
 }
 
 // Private
-template <typename T>
-void LinkedList<T>::release_head() {
+template <typename DataType>
+void LinkedList<DataType>::release_head() {
   while (head_) {
     Node* next_node = head_->next;
     delete head_;

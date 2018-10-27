@@ -8,7 +8,7 @@
 namespace td {
 
 // Implemented queue by using linked list
-template <typename T>
+template <typename DataType>
 class Queue {
  public:
   Queue() = default;
@@ -18,20 +18,20 @@ class Queue {
   bool is_empty();
 
   // Add given value to queue
-  void enqueue(const T& value);
+  void enqueue(const DataType& value);
 
   // Remove least recently-added item from queue and return its value.
-  T dequeue();
+  DataType dequeue();
 
  private:
   // Node's data type
   struct Node {
-    T data;
+    DataType data;
     Node* next{nullptr};
     Node* prev{nullptr};
 
     Node() {}
-    Node(const T& t) : data(t) {}
+    Node(const DataType& d) : data(d) {}
   };
 
   // The node which has |next| is the least recently-added element and 
@@ -46,8 +46,8 @@ class Queue {
 /****************  Queue implementation ****************/
 namespace td {
 
-template <typename T>
-Queue<T>::~Queue<T>() {
+template <typename DataType>
+Queue<DataType>::~Queue<DataType>() {
   while (sentinel_) {
     Node* next_node = sentinel_->next;
     delete sentinel_;
@@ -55,13 +55,13 @@ Queue<T>::~Queue<T>() {
   }
 }
 
-template <typename T>
-bool Queue<T>::is_empty() {
+template <typename DataType>
+bool Queue<DataType>::is_empty() {
   return sentinel_->next == nullptr;
 }
 
-template <typename T>
-void Queue<T>::enqueue(const T& value) {
+template <typename DataType>
+void Queue<DataType>::enqueue(const DataType& value) {
   Node* new_node = new Node(value);
 
   if (is_empty()) {
@@ -75,8 +75,8 @@ void Queue<T>::enqueue(const T& value) {
   sentinel_->prev = new_node;
 }
 
-template <typename T>
-T Queue<T>::dequeue() {
+template <typename DataType>
+DataType Queue<DataType>::dequeue() {
   if (is_empty()) {
     utils::validate(0, 0, utils::Action::kRemoved);
   }
@@ -88,7 +88,7 @@ T Queue<T>::dequeue() {
   }
   sentinel_->next = sentinel_->next->next;
 
-  T data = dequeued_node->data;
+  DataType data = dequeued_node->data;
   delete dequeued_node;
 
   return data;
