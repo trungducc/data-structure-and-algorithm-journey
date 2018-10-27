@@ -6,8 +6,8 @@ namespace td {
 
 // Returns either the index of the location in the vector, or -1 if the vector
 // doesn't contain the target.
-template <typename T>
-std::size_t binary_search(const std::vector<T>& vector, const T& target);
+template <typename DataType>
+std::size_t binary_search(const std::vector<DataType>& vector, const DataType& target);
 
 // Binary search implementation using recursion.
 template <typename T>
