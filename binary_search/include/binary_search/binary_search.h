@@ -7,12 +7,13 @@ namespace td {
 // Returns either the index of the location in the vector, or -1 if the vector
 // doesn't contain the target.
 template <typename DataType>
-std::size_t binary_search(const std::vector<DataType>& vector, const DataType& target);
+std::size_t binary_search(const std::vector<DataType>& vector,
+                          const DataType& target);
 
 // Binary search implementation using recursion.
-template <typename T>
-std::size_t recursion_binary_search(const std::vector<T>& vector,
-                                    const T& target,
+template <typename DataType>
+std::size_t recursion_binary_search(const std::vector<DataType>& vector,
+                                    const DataType& target,
                                     std::size_t lower_bound,
                                     std::size_t upper_bound);
 
@@ -21,8 +22,9 @@ std::size_t recursion_binary_search(const std::vector<T>& vector,
 /****************  Binary search implementation ****************/
 namespace td {
 
-template <typename T>
-std::size_t binary_search(const std::vector<T>& vector, const T& target) {
+template <typename DataType>
+std::size_t binary_search(const std::vector<DataType>& vector,
+                          const DataType& target) {
   long long lower_bound = 0;
   long long upper_bound = vector.size() - 1;
   long long mid_point;
@@ -42,9 +44,9 @@ std::size_t binary_search(const std::vector<T>& vector, const T& target) {
   return -1;
 }
 
-template <typename T>
-std::size_t recursion_binary_search(const std::vector<T>& vector,
-                                    const T& target,
+template <typename DataType>
+std::size_t recursion_binary_search(const std::vector<DataType>& vector,
+                                    const DataType& target,
                                     std::size_t lower_bound,
                                     std::size_t upper_bound) {
   if (lower_bound > vector.size() - 1 || upper_bound > vector.size() - 1 ||
