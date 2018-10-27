@@ -31,7 +31,7 @@ class Queue {
     Node* prev{nullptr};
 
     Node() {}
-    Node(const DataType& t) : data(t) {}
+    Node(const DataType& d) : data(d) {}
   };
 
   // The node which has |next| is the least recently-added element and 

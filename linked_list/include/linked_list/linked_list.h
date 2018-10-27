@@ -82,8 +82,8 @@ class LinkedList {
     DataType data;
     Node* next{nullptr};
 
-    Node(const DataType& t) : data(t) {}
-    Node(const DataType& t, Node* n) : data(t), next(n) {}
+    Node(const DataType& d) : data(d) {}
+    Node(const DataType& d, Node* n) : data(d), next(n) {}
   };
 
   // Pointer points to the first node in list.

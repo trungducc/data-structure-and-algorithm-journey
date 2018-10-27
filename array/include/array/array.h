@@ -120,8 +120,8 @@ Array<DataType>::Array(std::size_t capacity) : capacity_(capacity) {
 
 template <typename DataType>
 Array<DataType>::Array(std::initializer_list<DataType>&& il) : Array() {
-  for (const DataType& t : il) {
-    append(t);
+  for (const DataType& data : il) {
+    append(data);
   }
 }
 
