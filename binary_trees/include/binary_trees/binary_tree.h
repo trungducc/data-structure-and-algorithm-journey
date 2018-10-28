@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <queue>
 
 namespace td {
 
@@ -58,6 +59,36 @@ int height(BinaryNode<DataType>* node) {
   return std::max(height(node->left), height(node->right)) + 1;
 }
 
+// Preorder traversal implementation using recursion
+template <typename DataType>
+void preorder_traversal(BinaryNode<DataType>* node, std::vector<DataType>& v) {
+  if (!node)
+    return;
+  v.push_back(node->data);
+  preorder_traversal(node->left, v);
+  preorder_traversal(node->right, v);
+}
+
+// Inorder traversal implementation using recursion
+template <typename DataType>
+void inorder_traversal(BinaryNode<DataType>* node, std::vector<DataType>& v) {
+  if (!node)
+    return;
+  inorder_traversal(node->left, v);
+  v.push_back(node->data);
+  inorder_traversal(node->right, v);
+}
+
+// Postorder traversal implementation using recursion
+template <typename DataType>
+void postorder_traversal(BinaryNode<DataType>* node, std::vector<DataType>& v) {
+  if (!node)
+    return;
+  postorder_traversal(node->left, v);
+  postorder_traversal(node->right, v);
+  v.push_back(node->data);
+}
+
 }  // namespace detail
 
 // Return |true| if given node is root of binary tree. Otherwise, return
@@ -88,6 +119,53 @@ void release(BinaryNode<DataType>** node) {
   if (*node)
     delete *node;
   *node = nullptr;
+}
+
+// Level-order traversal on binary tree whose root node is given node.
+template <typename DataType>
+std::vector<DataType> levelorder_traversal(BinaryNode<DataType>* node) {
+  std::vector<DataType> result;
+  std::queue<BinaryNode<DataType>*> node_queue;
+
+  if (node)
+    node_queue.push(node);
+
+  while (!node_queue.empty()) {
+    BinaryNode<DataType>* curr_node = node_queue.front();
+    result.push_back(curr_node->data);
+    node_queue.pop();
+
+    if (curr_node->left)
+      node_queue.push(curr_node->left);
+    if (curr_node->right)
+      node_queue.push(curr_node->right);
+  }
+
+  return result;
+}
+
+// Preorder traversal on binary tree whose root node is given node.
+template <typename DataType>
+std::vector<DataType> preorder_traversal(BinaryNode<DataType>* node) {
+  std::vector<DataType> result;
+  detail::preorder_traversal(node, result);
+  return result;
+}
+
+// Inorder traversal on binary tree whose root node is given node.
+template <typename DataType>
+std::vector<DataType> inorder_traversal(BinaryNode<DataType>* node) {
+  std::vector<DataType> result;
+  detail::inorder_traversal(node, result);
+  return result;
+}
+
+// Postorder traversal on binary tree whose root node is given node.
+template <typename DataType>
+std::vector<DataType> postorder_traversal(BinaryNode<DataType>* node) {
+  std::vector<DataType> result;
+  detail::postorder_traversal(node, result);
+  return result;
 }
 
 }  // namespace binary_tree
