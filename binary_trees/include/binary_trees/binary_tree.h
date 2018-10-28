@@ -17,8 +17,11 @@ struct BinaryNode {
   ~BinaryNode() {
     if (left)
       delete left;
+    left = nullptr;
+
     if (right)
       delete right;
+    right = nullptr;
   }
 };
 
@@ -34,8 +37,8 @@ namespace detail {
 // data of |node| and |node|'s child nodes.
 template <typename DataType>
 bool is_bstree(BinaryNode<DataType>* node,
-               BinaryNode<DataType>* left_most,
-               BinaryNode<DataType>* right_most) {
+               BinaryNode<DataType>* left_most = nullptr,
+               BinaryNode<DataType>* right_most = nullptr) {
   if (!node)
     return true;
   if (left_most && left_most->data > node->data)
@@ -46,16 +49,32 @@ bool is_bstree(BinaryNode<DataType>* node,
          is_bstree(node->right, node, right_most);
 }
 
+// Return |std::size_t| can cause trouble with null nodes. |int| is used to
+// avoid these cases.
+template <typename DataType>
+int height(BinaryNode<DataType>* node) {
+  if (!node)
+    return -1;
+  return std::max(height(node->left), height(node->right)) + 1;
+}
+
 }  // namespace detail
 
 // Return |true| if given node is root of binary tree. Otherwise, return
 // |false|.
 template <typename DataType>
 bool is_bstree(BinaryNode<DataType>* node) {
-  return detail::is_bstree(node, nullptr, nullptr);
+  return detail::is_bstree(node);
+}
+
+// Return height of tree whose root node is given node.
+template <typename DataType>
+int height(BinaryNode<DataType>* node) {
+  return detail::height(node);
 }
 
 // Return number of nodes in tree whose root node is given node.
+// Return -1 if given node is null.
 template <typename DataType>
 std::size_t node_count(BinaryNode<DataType>* node) {
   if (!node)
@@ -65,19 +84,11 @@ std::size_t node_count(BinaryNode<DataType>* node) {
 
 // Release nodes in tree whose root node is given node.
 template <typename DataType>
-void release(BinaryNode<DataType>* node) {
-  delete node;
-  node = nullptr;
-}
-
-// Return height of tree whose root node is given node.
-template <typename DataType>
-std::size_t height(BinaryNode<DataType>* node) {
-  if (!node)
-    return -1;
-  return height(node->left) + height(node->right) + 1;
+void release(BinaryNode<DataType>** node) {
+  if (*node)
+    delete *node;
+  *node = nullptr;
 }
 
 }  // namespace binary_tree
 }  // namespace td
-
