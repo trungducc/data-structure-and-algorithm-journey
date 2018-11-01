@@ -72,7 +72,7 @@ TEST(BinaryTreeTest, NodeCount) {
   //              50
   //             /  \         3
   //            5    3
-  root->right = new BinaryNode<int>(6);
+  root->right = new BinaryNode<int>(3);
   EXPECT_EQ(3, node_count(root));
 
   //              50
@@ -142,7 +142,7 @@ TEST(BinaryTreeTest, Height) {
   //              50
   //             /  \         1
   //            5    3
-  root->right = new BinaryNode<int>(6);
+  root->right = new BinaryNode<int>(3);
   EXPECT_EQ(1, height(root));
 
   //              50
@@ -176,6 +176,110 @@ TEST(BinaryTreeTest, Height) {
   EXPECT_EQ(4, height(root));
 
   release(&root);
+}
+
+TEST(BinaryTreeTest, LevelorderTraversal) {
+  BinaryNode<int>* root = nullptr;
+  EXPECT_TRUE(levelorder_traversal(root).empty());
+
+  //              50
+  //             /  \
+  //            5    3
+  //           /    / \
+  //          8    2   2
+  //         /
+  //        9
+  //       /
+  //      0
+  root = new BinaryNode<int>(50);
+  root->left = new BinaryNode<int>(5);
+  root->right = new BinaryNode<int>(3);
+  root->right->left = new BinaryNode<int>(2);
+  root->right->right = new BinaryNode<int>(2);
+  root->left->left = new BinaryNode<int>(8);
+  root->left->left->left = new BinaryNode<int>(9);
+  root->left->left->left->left = new BinaryNode<int>(0);
+
+  EXPECT_EQ(std::vector<int>({50, 5, 3, 8, 2, 2, 9, 0}),
+            levelorder_traversal(root));
+}
+
+TEST(BinaryTreeTest, PreorderTraversal) {
+  BinaryNode<int>* root = nullptr;
+  EXPECT_TRUE(preorder_traversal(root).empty());
+
+  //              50
+  //             /  \
+  //            5    3
+  //           /    / \
+  //          8    2   2
+  //         /
+  //        9
+  //       /
+  //      0
+  root = new BinaryNode<int>(50);
+  root->left = new BinaryNode<int>(5);
+  root->right = new BinaryNode<int>(3);
+  root->right->left = new BinaryNode<int>(2);
+  root->right->right = new BinaryNode<int>(2);
+  root->left->left = new BinaryNode<int>(8);
+  root->left->left->left = new BinaryNode<int>(9);
+  root->left->left->left->left = new BinaryNode<int>(0);
+
+  EXPECT_EQ(std::vector<int>({50, 5, 8, 9, 0, 3, 2, 2}),
+            preorder_traversal(root));
+}
+
+TEST(BinaryTreeTest, InorderTraversal) {
+  BinaryNode<int>* root = nullptr;
+  EXPECT_TRUE(inorder_traversal(root).empty());
+
+  //              50
+  //             /  \
+  //            5    3
+  //           /    / \
+  //          8    2   2
+  //         /
+  //        9
+  //       /
+  //      0
+  root = new BinaryNode<int>(50);
+  root->left = new BinaryNode<int>(5);
+  root->right = new BinaryNode<int>(3);
+  root->right->left = new BinaryNode<int>(2);
+  root->right->right = new BinaryNode<int>(2);
+  root->left->left = new BinaryNode<int>(8);
+  root->left->left->left = new BinaryNode<int>(9);
+  root->left->left->left->left = new BinaryNode<int>(0);
+
+  EXPECT_EQ(std::vector<int>({0, 9, 8, 5, 50, 2, 3, 2}),
+            inorder_traversal(root));
+}
+
+TEST(BinaryTreeTest, PostorderTraversal) {
+  BinaryNode<int>* root = nullptr;
+  EXPECT_TRUE(postorder_traversal(root).empty());
+
+  //              50
+  //             /  \
+  //            5    3
+  //           /    / \
+  //          8    2   2
+  //         /
+  //        9
+  //       /
+  //      0
+  root = new BinaryNode<int>(50);
+  root->left = new BinaryNode<int>(5);
+  root->right = new BinaryNode<int>(3);
+  root->right->left = new BinaryNode<int>(2);
+  root->right->right = new BinaryNode<int>(2);
+  root->left->left = new BinaryNode<int>(8);
+  root->left->left->left = new BinaryNode<int>(9);
+  root->left->left->left->left = new BinaryNode<int>(0);
+
+  EXPECT_EQ(std::vector<int>({0, 9, 8, 5, 2, 2, 3, 50}),
+            postorder_traversal(root));
 }
 
 }  // namespace
