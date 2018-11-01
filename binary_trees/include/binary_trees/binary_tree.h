@@ -14,16 +14,6 @@ struct BinaryNode {
   BinaryNode<DataType>* right;
 
   BinaryNode(const DataType& d) : data(d), left(nullptr), right(nullptr) {}
-
-  ~BinaryNode() {
-    if (left)
-      delete left;
-    left = nullptr;
-
-    if (right)
-      delete right;
-    right = nullptr;
-  }
 };
 
 namespace binary_tree {
@@ -116,8 +106,13 @@ std::size_t node_count(BinaryNode<DataType>* node) {
 // Release nodes in tree whose root node is given node.
 template <typename DataType>
 void release(BinaryNode<DataType>** node) {
-  if (*node)
-    delete *node;
+  if (!*node)
+    return;
+
+  release(&(*node)->left);
+  release(&(*node)->right);
+
+  delete *node;
   *node = nullptr;
 }
 
