@@ -199,7 +199,7 @@ void LinkedList<DataType>::push_front(const DataType& value) {
 
 template <typename DataType>
 DataType LinkedList<DataType>::pop_front() {
-  utils::validate(0, size_--, utils::Action::kRemoved);
+  utils::validate(0, size_--, utils::Action::kRemove);
 
   // Get returned data
   Node* removed_node = head_;
@@ -230,7 +230,7 @@ void LinkedList<DataType>::push_back(const DataType& value) {
 template <typename DataType>
 DataType LinkedList<DataType>::pop_back() {
   std::size_t last_index = size_ - 1;
-  utils::validate(last_index, size_--, utils::Action::kRemoved);
+  utils::validate(last_index, size_--, utils::Action::kRemove);
 
   // Get last node
   Node** pp_tail_node = &head_;
@@ -263,7 +263,7 @@ DataType LinkedList<DataType>::back() {
 
 template <typename DataType>
 void LinkedList<DataType>::insert(const DataType& value, std::size_t index) {
-  utils::validate(index, size_++, utils::Action::kInserted);
+  utils::validate(index, size_++, utils::Action::kInsert);
 
   // Find node at given index
   Node** pp_node = &head_;
@@ -279,7 +279,7 @@ void LinkedList<DataType>::insert(const DataType& value, std::size_t index) {
 
 template <typename DataType>
 void LinkedList<DataType>::remove_at(std::size_t index) {
-  utils::validate(index, size_--, utils::Action::kRemoved);
+  utils::validate(index, size_--, utils::Action::kRemove);
 
   // Find removed node
   Node** pp_node = &head_;

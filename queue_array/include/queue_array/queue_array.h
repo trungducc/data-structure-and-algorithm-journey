@@ -91,7 +91,7 @@ void Queue<DataType>::enqueue(const DataType& value) {
 template <typename DataType>
 DataType Queue<DataType>::dequeue() {
   if (is_empty()) {
-    utils::validate(0, 0, utils::Action::kRemoved);
+    utils::validate(0, 0, utils::Action::kRemove);
   }
 
   DataType data = items_[dequeue_index_];

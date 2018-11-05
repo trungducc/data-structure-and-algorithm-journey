@@ -7,11 +7,11 @@ namespace td {
 namespace utils {
 
 void validate(std::size_t index, std::size_t size, Action action) {
-  if (size == 0 && action != Action::kInserted) {
+  if (size == 0 && action != Action::kInsert) {
     throw std::out_of_range("Access to empty container.");
   }
 
-  std::size_t range = action == Action::kInserted ? size + 1 : size;
+  std::size_t range = action == Action::kInsert ? size + 1 : size;
 
   if (index < range) {
     // Valid index

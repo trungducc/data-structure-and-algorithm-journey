@@ -192,7 +192,7 @@ void Array<ItemType>::append(const ItemType& item) {
 
 template <typename ItemType>
 void Array<ItemType>::insert(const ItemType& item, std::size_t index) {
-  utils::validate(index, size_, utils::Action::kInserted);
+  utils::validate(index, size_, utils::Action::kInsert);
   reallocate_if_needed(++size_);
 
   for (std::size_t i = size_ - 1; i > index; --i) {
@@ -210,7 +210,7 @@ void Array<ItemType>::prepend(const ItemType& item) {
 template <typename ItemType>
 ItemType Array<ItemType>::pop() {
   std::size_t last_index = size_ - 1;
-  utils::validate(last_index, size_, utils::Action::kRemoved);
+  utils::validate(last_index, size_, utils::Action::kRemove);
 
   ItemType& last_item = items_[last_index];
 
@@ -220,7 +220,7 @@ ItemType Array<ItemType>::pop() {
 
 template <typename ItemType>
 void Array<ItemType>::remove_at(std::size_t index) {
-  utils::validate(index, size_, utils::Action::kRemoved);
+  utils::validate(index, size_, utils::Action::kRemove);
 
   for (std::size_t i = index; i < size_ - 1; ++i) {
     items_[i] = items_[i + 1];
