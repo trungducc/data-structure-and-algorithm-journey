@@ -8,9 +8,10 @@ namespace td {
 // Binary node template, contains a |left| pointer, a |right| pointer, and a
 // data element.
 template <typename DataType>
-class BinaryNode {
- public:
+struct BinaryNode {
   DataType data;
+  std::size_t height{0};
+
   BinaryNode<DataType>* left{nullptr};
   BinaryNode<DataType>* right{nullptr};
 

@@ -16,7 +16,6 @@ add_executable(binary_trees_test
 )
 target_link_libraries(binary_trees_test 
     binary_trees
-    utils
     gtest_main
 )
 add_test(NAME binary_trees_test COMMAND binary_trees_test)
