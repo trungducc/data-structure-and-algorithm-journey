@@ -10,10 +10,12 @@ namespace td {
 template <typename DataType>
 struct BinaryNode {
   DataType data;
-  BinaryNode<DataType>* left;
-  BinaryNode<DataType>* right;
+  std::size_t height{0};
 
-  BinaryNode(const DataType& d) : data(d), left(nullptr), right(nullptr) {}
+  BinaryNode<DataType>* left{nullptr};
+  BinaryNode<DataType>* right{nullptr};
+
+  BinaryNode(const DataType& d) : data(d) {}
 };
 
 namespace binary_tree {

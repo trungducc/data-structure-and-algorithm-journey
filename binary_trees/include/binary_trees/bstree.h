@@ -10,30 +10,20 @@ namespace detail {
 
 // Return pointer points to node with minimum value in tree.
 template <typename DataType>
-BinaryNode<DataType>** min_node(BinaryNode<DataType>** node) {
-  if (!*node) {
-    throw std::invalid_argument("Cannot find minimum from nullptr");
+BinaryNode<DataType>* min_node(BinaryNode<DataType>* node) {
+  if (!node) {
+    throw std::invalid_argument("Cannot find minimum on null node");
   }
-
-  if ((*node)->left) {
-    return min_node(&(*node)->left);
-  } else {
-    return node;
-  }
+  return node->left ? min_node(node->left) : node;
 }
 
 // Return pointer points to node with maximum value in tree.
 template <typename DataType>
-BinaryNode<DataType>** max_node(BinaryNode<DataType>** node) {
-  if (!*node) {
-    throw std::invalid_argument("Cannot find maximum from nullptr");
+BinaryNode<DataType>* max_node(BinaryNode<DataType>* node) {
+  if (!node) {
+    throw std::invalid_argument("Cannot find maximum on null node");
   }
-
-  if ((*node)->right) {
-    return max_node(&(*node)->right);
-  } else {
-    return node;
-  }
+  return node->right ? max_node(node->right) : node;
 }
 
 // Return node which has same data as given data. Return nullptr if node can't
@@ -78,13 +68,13 @@ void data_in_range(BinaryNode<DataType>* node,
 // Return the minimum value stored in the tree whose root is given node.
 template <typename DataType>
 DataType min(BinaryNode<DataType>* node) {
-  return (*detail::min_node(&node))->data;
+  return detail::min_node(node)->data;
 }
 
 // Return the maximum value stored in the tree whose root is given node.
 template <typename DataType>
 DataType max(BinaryNode<DataType>* node) {
-  return (*detail::max_node(&node))->data;
+  return detail::max_node(node)->data;
 }
 
 // Used to get next value in inorder traversal of the tree.
@@ -102,7 +92,7 @@ void inorder_successor(BinaryNode<DataType>* node,
   }
 
   if (curr_node->right) {
-    successor = (*detail::min_node(&curr_node->right))->data;
+    successor = detail::min_node(curr_node->right)->data;
     return;
   }
 
@@ -127,50 +117,44 @@ bool contain(BinaryNode<DataType>* node, const DataType& data) {
 
 // Insert the given data into tree whose root is given node.
 template <typename DataType>
-void insert(BinaryNode<DataType>** node, const DataType& data) {
+void insert(BinaryNode<DataType>** p_node, const DataType& data) {
   BinaryNode<DataType>* new_node = new BinaryNode<DataType>(data);
 
-  if (!*node) {
-    *node = new_node;
+  if (!*p_node) {
+    *p_node = new_node;
     return;
   }
 
-  if (data < (*node)->data) {
-    insert(&(*node)->left, data);
+  if (data < (*p_node)->data) {
+    insert(&(*p_node)->left, data);
   } else {
-    insert(&(*node)->right, data);
+    insert(&(*p_node)->right, data);
   }
 }
 
 // Remove the given data from tree whose root is given node.
 template <typename DataType>
-void remove(BinaryNode<DataType>** node, const DataType& data) {
-  if (!*node) {
+void remove(BinaryNode<DataType>** p_node, const DataType& data) {
+  BinaryNode<DataType>* node = *p_node;
+
+  if (!node) {
     return;
   }
 
-  if ((*node)->data != data) {
-    remove(data < (*node)->data ? &(*node)->left : &(*node)->right, data);
+  if (node->data != data) {
+    remove(data < node->data ? &node->left : &node->right, data);
     return;
   }
 
-  BinaryNode<DataType>* removed_node = *node;
-
-  if (removed_node->left && removed_node->right) {
-    BinaryNode<DataType>** right_child_min_node =
-        detail::min_node(&removed_node->right);
-    removed_node->data = (*right_child_min_node)->data;
-    (*right_child_min_node)->data = data;
-
-    removed_node = *right_child_min_node;
-    *right_child_min_node = nullptr;
-  } else if (!removed_node->left) {
-    *node = removed_node->right;
+  if (node->left && node->right) {
+    BinaryNode<DataType>* right_child_min_node = detail::min_node(node->right);
+    node->data = right_child_min_node->data;
+    right_child_min_node->data = data;
+    remove(&node->right, data);
   } else {
-    *node = removed_node->left;
+    *p_node = node->right ?: node->left;
+    delete node;
   }
-
-  delete removed_node;
 }
 
 // Return array of data which are equal or greater than |lower_bound|

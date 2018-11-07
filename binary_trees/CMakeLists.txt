@@ -9,7 +9,11 @@ target_include_directories(${PROJECT_NAME}
 )
 
 # Add tests and link with libraries
-add_executable(binary_trees_test test/binary_tree_test.cc test/bstree_test.cc)
+add_executable(binary_trees_test 
+    test/binary_tree_test.cc
+    test/bstree_test.cc 
+    test/avl_tree_test.cc
+)
 target_link_libraries(binary_trees_test 
     binary_trees
     gtest_main
