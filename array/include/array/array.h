@@ -9,8 +9,6 @@ constexpr int min_capacity = 16;
 constexpr int growth_factor = 2;
 constexpr int shrink_factor = 4;
 
-constexpr int index_not_found = -1;
-
 template <typename ItemType>
 class Array;
 

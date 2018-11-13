@@ -3,6 +3,10 @@
 #include <utility>
 
 namespace td {
+
+// A value indicating that a requested item couldn’t be found or doesn’t exist.
+constexpr std::size_t index_not_found = -1;
+
 namespace utils {
 
 // Specifies action which will be performed after `validate` method is called.
