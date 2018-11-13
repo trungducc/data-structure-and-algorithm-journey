@@ -46,13 +46,14 @@ class PriorityQueue {
     DataType data;
     Priority priority;
 
+    Item() = default;
     Item(const DataType& d, const Priority& p);
   };
 
-  // Swaps item at given with its parent until it's not greater than its parent.
+  // Swap item at given with its parent until it's not greater than its parent.
   void sift_up(std::size_t index);
 
-  // Swaps item at given with its largest child until it's equal or greater than
+  // Swap item at given with its largest child until it's equal or greater than
   // both its children.
   void sift_down(std::size_t index);
 
@@ -99,6 +100,11 @@ bool PriorityQueue<DataType>::is_empty() {
 }
 
 template <typename DataType>
+std::size_t PriorityQueue<DataType>::size() {
+  return size_;
+}
+
+template <typename DataType>
 DataType PriorityQueue<DataType>::max() {
   if (size_ == 0) {
     throw std::out_of_range("Cannot call |max| on empty priority queue.");
@@ -113,13 +119,12 @@ DataType PriorityQueue<DataType>::extract_max() {
         "Cannot call |extract_max| on empty priority queue.");
   }
 
-  DataType max = max();
+  DataType result = max();
 
   items_[0] = items_[--size_];
-  items_[size_] = 0;
   sift_down(0);
 
-  return max;
+  return result;
 }
 
 template <typename DataType>
