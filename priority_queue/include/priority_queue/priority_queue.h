@@ -9,11 +9,9 @@
 namespace td {
 
 // Priority Queue implementation by using max heap.
-template <typename DataType>
+template <typename DataType, typename PriorityType>
 class PriorityQueue {
  public:
-  using Priority = int;
-
   PriorityQueue(std::size_t capacity);
 
   ~PriorityQueue();
@@ -32,10 +30,10 @@ class PriorityQueue {
 
   // If |data| exists in priority queue, update its item with given priority.
   // Otherwise, does nothing.
-  void update(const DataType& data, const Priority& new_priority);
+  void update(const DataType& data, const PriorityType& new_priority);
 
   // Insert new item. If priority queue is full, does nothing.
-  void insert(const DataType& data, const Priority& priority);
+  void insert(const DataType& data, const PriorityType& priority);
 
   // Remove given data from priority queue.
   void remove(const DataType& data);
@@ -44,10 +42,10 @@ class PriorityQueue {
   // Represent an element of priority queue.
   struct Item {
     DataType data;
-    Priority priority;
+    PriorityType priority;
 
     Item() = default;
-    Item(const DataType& d, const Priority& p);
+    Item(const DataType& d, const PriorityType& p);
   };
 
   // Swap item at given with its parent until it's not greater than its parent.
@@ -85,35 +83,35 @@ class PriorityQueue {
 namespace td {
 
 // Public
-template <typename DataType>
-PriorityQueue<DataType>::PriorityQueue(std::size_t capacity)
+template <typename DataType, typename PriorityType>
+PriorityQueue<DataType, PriorityType>::PriorityQueue(std::size_t capacity)
     : size_(0), capacity_(capacity), items_(new Item[capacity]) {}
 
-template <typename DataType>
-PriorityQueue<DataType>::~PriorityQueue() {
+template <typename DataType, typename PriorityType>
+PriorityQueue<DataType, PriorityType>::~PriorityQueue() {
   delete[] items_;
 }
 
-template <typename DataType>
-bool PriorityQueue<DataType>::is_empty() {
+template <typename DataType, typename PriorityType>
+bool PriorityQueue<DataType, PriorityType>::is_empty() {
   return size_ == 0;
 }
 
-template <typename DataType>
-std::size_t PriorityQueue<DataType>::size() {
+template <typename DataType, typename PriorityType>
+std::size_t PriorityQueue<DataType, PriorityType>::size() {
   return size_;
 }
 
-template <typename DataType>
-DataType PriorityQueue<DataType>::max() {
+template <typename DataType, typename PriorityType>
+DataType PriorityQueue<DataType, PriorityType>::max() {
   if (size_ == 0) {
     throw std::out_of_range("Cannot call |max| on empty priority queue.");
   }
   return items_[0].data;
 }
 
-template <typename DataType>
-DataType PriorityQueue<DataType>::extract_max() {
+template <typename DataType, typename PriorityType>
+DataType PriorityQueue<DataType, PriorityType>::extract_max() {
   if (size_ == 0) {
     throw std::out_of_range(
         "Cannot call |extract_max| on empty priority queue.");
@@ -127,14 +125,15 @@ DataType PriorityQueue<DataType>::extract_max() {
   return result;
 }
 
-template <typename DataType>
-void PriorityQueue<DataType>::update(const DataType& data,
-                                     const Priority& new_priority) {
+template <typename DataType, typename PriorityType>
+void PriorityQueue<DataType, PriorityType>::update(
+    const DataType& data,
+    const PriorityType& new_priority) {
   std::size_t updated_index = index_of(data);
   if (updated_index == index_not_found)
     return;
 
-  Priority old_priority = items_[updated_index].priority;
+  PriorityType old_priority = items_[updated_index].priority;
   items_[updated_index].priority = new_priority;
 
   if (old_priority > new_priority) {
@@ -144,29 +143,31 @@ void PriorityQueue<DataType>::update(const DataType& data,
   }
 }
 
-template <typename DataType>
-void PriorityQueue<DataType>::insert(const DataType& data,
-                                     const Priority& priority) {
+template <typename DataType, typename PriorityType>
+void PriorityQueue<DataType, PriorityType>::insert(
+    const DataType& data,
+    const PriorityType& priority) {
   if (size_ == capacity_)
     return;
   items_[size_] = Item(data, priority);
   sift_up(size_++);
 }
 
-template <typename DataType>
-void PriorityQueue<DataType>::remove(const DataType& data) {
+template <typename DataType, typename PriorityType>
+void PriorityQueue<DataType, PriorityType>::remove(const DataType& data) {
   std::size_t removed_index = index_of(data);
   if (removed_index != index_not_found)
     remove_at(removed_index);
 }
 
 // Private
-template <typename DataType>
-PriorityQueue<DataType>::Item::Item(const DataType& d, const Priority& p)
+template <typename DataType, typename PriorityType>
+PriorityQueue<DataType, PriorityType>::Item::Item(const DataType& d,
+                                                  const PriorityType& p)
     : data(d), priority(p) {}
 
-template <typename DataType>
-void PriorityQueue<DataType>::sift_up(std::size_t index) {
+template <typename DataType, typename PriorityType>
+void PriorityQueue<DataType, PriorityType>::sift_up(std::size_t index) {
   if (index == 0 || index >= size_)
     return;
 
@@ -179,8 +180,8 @@ void PriorityQueue<DataType>::sift_up(std::size_t index) {
   sift_up(parent_index);
 }
 
-template <typename DataType>
-void PriorityQueue<DataType>::sift_down(std::size_t index) {
+template <typename DataType, typename PriorityType>
+void PriorityQueue<DataType, PriorityType>::sift_down(std::size_t index) {
   if (index >= size_)
     return;
 
@@ -204,22 +205,24 @@ void PriorityQueue<DataType>::sift_down(std::size_t index) {
   sift_down(highest_priority_index);
 }
 
-template <typename DataType>
-void PriorityQueue<DataType>::swap(std::size_t first, std::size_t second) {
+template <typename DataType, typename PriorityType>
+void PriorityQueue<DataType, PriorityType>::swap(std::size_t first,
+                                                 std::size_t second) {
   Item temp = items_[first];
   items_[first] = items_[second];
   items_[second] = temp;
 }
 
-template <typename DataType>
-void PriorityQueue<DataType>::remove_at(std::size_t index) {
+template <typename DataType, typename PriorityType>
+void PriorityQueue<DataType, PriorityType>::remove_at(std::size_t index) {
   items_[index].priority = std::numeric_limits<int>::max();
   sift_up(index);
   extract_max();
 }
 
-template <typename DataType>
-std::size_t PriorityQueue<DataType>::index_of(const DataType& data) {
+template <typename DataType, typename PriorityType>
+std::size_t PriorityQueue<DataType, PriorityType>::index_of(
+    const DataType& data) {
   for (std::size_t i = 0; i < size_; ++i) {
     if (data == items_[i].data)
       return i;

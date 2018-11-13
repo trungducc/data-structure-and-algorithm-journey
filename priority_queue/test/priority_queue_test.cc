@@ -5,7 +5,7 @@ namespace {
 using namespace td;
 
 TEST(PriorityQueueTest, IsEmpty) {
-  PriorityQueue<std::string> priority_queue(10);
+  PriorityQueue<std::string, int> priority_queue(10);
   EXPECT_TRUE(priority_queue.is_empty());
 
   priority_queue.insert("c++", 1);
@@ -13,7 +13,7 @@ TEST(PriorityQueueTest, IsEmpty) {
 }
 
 TEST(PriorityQueueTest, Size) {
-  PriorityQueue<std::string> priority_queue(10);
+  PriorityQueue<std::string, int> priority_queue(10);
   EXPECT_EQ(0, priority_queue.size());
 
   priority_queue.insert("c++", 1);
@@ -24,7 +24,7 @@ TEST(PriorityQueueTest, Size) {
 }
 
 TEST(PriorityQueueTest, Max) {
-  PriorityQueue<std::string> priority_queue(10);
+  PriorityQueue<std::string, int> priority_queue(10);
 
   EXPECT_THROW(priority_queue.max(), std::out_of_range);
 
@@ -38,7 +38,7 @@ TEST(PriorityQueueTest, Max) {
 }
 
 TEST(PriorityQueueTest, ExtractMax) {
-  PriorityQueue<std::string> priority_queue(10);
+  PriorityQueue<std::string, int> priority_queue(10);
   priority_queue.insert("c++", 10);
   priority_queue.insert("c", 2);
   priority_queue.insert("swift", 5);
@@ -55,7 +55,7 @@ TEST(PriorityQueueTest, ExtractMax) {
 }
 
 TEST(PriorityQueueTest, Update) {
-  PriorityQueue<std::string> priority_queue(10);
+  PriorityQueue<std::string, int> priority_queue(10);
   priority_queue.insert("c++", 10);
   priority_queue.insert("c", 2);
   priority_queue.insert("swift", 5);
@@ -69,7 +69,7 @@ TEST(PriorityQueueTest, Update) {
 }
 
 TEST(PriorityQueueTest, Insert) {
-  PriorityQueue<std::string> priority_queue(10);
+  PriorityQueue<std::string, int> priority_queue(10);
   priority_queue.insert("c++", 10);
   priority_queue.insert("c", 2);
   priority_queue.insert("swift", 5);
@@ -90,7 +90,7 @@ TEST(PriorityQueueTest, Insert) {
 }
 
 TEST(PriorityQueueTest, Remove) {
-  PriorityQueue<std::string> priority_queue(10);
+  PriorityQueue<std::string, int> priority_queue(10);
 
   priority_queue.remove("R");
 
