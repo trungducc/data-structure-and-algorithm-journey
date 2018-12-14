@@ -48,11 +48,12 @@ class PriorityQueue {
     Item(const DataType& d, const PriorityType& p);
   };
 
-  // Swap item at given with its parent until it's not greater than its parent.
+  // Swap item at given index with its parent until it's not greater than its
+  // parent.
   void sift_up(std::size_t index);
 
-  // Swap item at given with its largest child until it's equal or greater than
-  // both its children.
+  // Swap item at given index with its largest child until it's equal or greater
+  // than both its children.
   void sift_down(std::size_t index);
 
   // Swap items at 2 given indexes.
@@ -231,3 +232,4 @@ std::size_t PriorityQueue<DataType, PriorityType>::index_of(
 }
 
 }  // namespace td
+

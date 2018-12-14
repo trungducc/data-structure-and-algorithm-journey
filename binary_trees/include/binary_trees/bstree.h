@@ -8,7 +8,7 @@ namespace bstree {
 // Private
 namespace detail {
 
-// Return pointer points to node with minimum value in tree.
+// Return node with minimum value in tree.
 template <typename DataType>
 BinaryNode<DataType>* min_node(BinaryNode<DataType>* node) {
   if (!node) {
@@ -17,7 +17,7 @@ BinaryNode<DataType>* min_node(BinaryNode<DataType>* node) {
   return node->left ? min_node(node->left) : node;
 }
 
-// Return pointer points to node with maximum value in tree.
+// Return node with maximum value in tree.
 template <typename DataType>
 BinaryNode<DataType>* max_node(BinaryNode<DataType>* node) {
   if (!node) {
