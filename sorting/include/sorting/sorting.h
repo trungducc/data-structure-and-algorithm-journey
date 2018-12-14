@@ -5,6 +5,38 @@
 namespace td {
 namespace sorting {
 
+// Private
+namespace detail {
+// The heap contains first |size| items of given array.
+// Swap item at given index with its largest child until its priority is equal
+// or greater than both its children.
+template <typename ItemType>
+void heapify(std::vector<ItemType>& items,
+             bool is_max_heap,
+             std::size_t size,
+             std::size_t index) {
+  if (index >= size)
+    return;
+
+  std::size_t highest_priority_index = index;
+  std::size_t left_child_index = index * 2 + 1;
+  std::size_t right_child_index = left_child_index + 1;
+
+  if (left_child_index < size &&
+      items[highest_priority_index] < items[left_child_index] == is_max_heap)
+    highest_priority_index = left_child_index;
+  if (right_child_index < size &&
+      items[highest_priority_index] < items[right_child_index] == is_max_heap)
+    highest_priority_index = right_child_index;
+
+  if (highest_priority_index == index)
+    return;
+
+  std::swap(items[highest_priority_index], items[index]);
+  heapify(items, is_max_heap, size, highest_priority_index);
+}
+}  // namespace detail
+
 // Bubble sort implementation
 template <typename ItemType>
 void bubble_sort(std::vector<ItemType>& items, bool ascending = true) {
@@ -48,6 +80,18 @@ void insertion_sort(std::vector<ItemType>& items, bool ascending = true) {
   }
 }
 
+// Heap sort implementation
+template <typename ItemType>
+void heap_sort(std::vector<ItemType>& items, bool ascending = true) {
+  std::size_t size = items.size();
+  for (int i = size / 2; i >= 0; --i)
+    detail::heapify(items, ascending, size, i);
+
+  for (int i = size - 1; i > 0; --i) {
+    std::swap(items[0], items[i]);
+    detail::heapify(items, ascending, i, 0);
+  }
+}
+
 }  // namespace sorting
 }  // namespace td
-
