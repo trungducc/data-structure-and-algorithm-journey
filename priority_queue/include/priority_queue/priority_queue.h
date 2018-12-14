@@ -172,7 +172,7 @@ void PriorityQueue<DataType, PriorityType>::sift_up(std::size_t index) {
   if (index == 0 || index >= size_)
     return;
 
-  std::size_t parent_index = index / 2;
+  std::size_t parent_index = (index - 1) / 2;
 
   if (items_[index].priority <= items_[parent_index].priority)
     return;
@@ -187,7 +187,7 @@ void PriorityQueue<DataType, PriorityType>::sift_down(std::size_t index) {
     return;
 
   std::size_t highest_priority_index = index;
-  std::size_t left_child_index = index * 2;
+  std::size_t left_child_index = index * 2 + 1;
   std::size_t right_child_index = left_child_index + 1;
 
   if (left_child_index < size_ &&
