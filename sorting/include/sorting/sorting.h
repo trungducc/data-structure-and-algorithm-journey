@@ -35,6 +35,53 @@ void heapify(std::vector<ItemType>& items,
   std::swap(items[highest_priority_index], items[index]);
   heapify(items, is_max_heap, size, highest_priority_index);
 }
+
+// Sort items in given range of array (items[end] is not in the array)
+//
+// Note: Given range of array must contain 2 sorted sub array.
+//       Left sub array is items[begin:middle-1].
+//       Right sub array is items[middle:end-1].
+template <typename ItemType>
+void merge(std::vector<ItemType>& items,
+           bool ascending,
+           std::size_t begin,
+           std::size_t middle,
+           std::size_t end) {
+  std::vector<ItemType> holder;
+  std::size_t l = begin;
+  std::size_t r = middle;
+
+  while (l < middle && r < end) {
+    if (items[l] < items[r] == ascending)
+      holder.push_back(items[l++]);
+    else
+      holder.push_back(items[r++]);
+  }
+
+  while (l < middle)
+    holder.push_back(items[l++]);
+  while (r < end)
+    holder.push_back(items[r++]);
+
+  for (std::size_t i = 0; i < holder.size(); ++i)
+    items[i + begin] = holder[i];
+}
+
+// Sort items in given range of array (items[end] is not in the array)
+template <typename ItemType>
+void merge_sort(std::vector<ItemType>& items,
+                bool ascending,
+                std::size_t begin,
+                std::size_t end) {
+  if (begin + 2 > end)
+    return;
+
+  std::size_t middle = (begin + end) / 2;
+  merge_sort(items, ascending, begin, middle);
+  merge_sort(items, ascending, middle, end);
+  merge(items, ascending, begin, middle, end);
+}
+
 }  // namespace detail
 
 // Bubble sort implementation
@@ -93,5 +140,12 @@ void heap_sort(std::vector<ItemType>& items, bool ascending = true) {
   }
 }
 
+// Merge sort implemetation
+template <typename ItemType>
+void merge_sort(std::vector<ItemType>& items, bool ascending = true) {
+  detail::merge_sort(items, ascending, 0, items.size());
+}
+
 }  // namespace sorting
 }  // namespace td
+
