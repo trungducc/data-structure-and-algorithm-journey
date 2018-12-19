@@ -1,5 +1,6 @@
 #pragma once
 
+#include <random>
 #include <vector>
 
 namespace td {
@@ -82,6 +83,54 @@ void merge_sort(std::vector<ItemType>& items,
   merge(items, ascending, begin, middle, end);
 }
 
+// Take first element as pivot, place pivot at its correct position in sorted
+// array, and place all smaller (smaller than pivot) to left of pivot and all
+// greater elements to right of pivot
+template <typename ItemType>
+std::size_t partition(std::vector<ItemType>& items,
+                      bool ascending,
+                      std::size_t begin,
+                      std::size_t end) {
+  ItemType pivot = items[begin];
+  std::size_t l = begin + 1;
+  std::size_t r = end - 1;
+
+  while (true) {
+    while (l < end && items[l] < pivot == ascending)
+      ++l;
+    while (r > begin && items[r] > pivot == ascending)
+      --r;
+
+    if (l >= r)
+      break;
+    std::swap(items[l++], items[r--]);
+  }
+
+  std::swap(items[r], items[begin]);
+  return r;
+}
+
+// Sort items in given range of array (items[end] is not in the array)
+template <typename ItemType>
+void quick_sort(std::vector<ItemType>& items,
+                bool ascending,
+                std::size_t begin,
+                std::size_t end) {
+  if (begin + 2 > end)
+    return;
+
+  std::size_t pivot_index = partition(items, ascending, begin, end);
+  quick_sort(items, ascending, begin, pivot_index);
+  quick_sort(items, ascending, pivot_index + 1, end);
+}
+
+// Shuffle items in given array
+template <typename ItemType>
+void shuffle(std::vector<ItemType>& items) {
+  auto rng = std::default_random_engine{};
+  std::shuffle(std::begin(items), std::end(items), rng);
+}
+
 }  // namespace detail
 
 // Bubble sort implementation
@@ -146,6 +195,12 @@ void merge_sort(std::vector<ItemType>& items, bool ascending = true) {
   detail::merge_sort(items, ascending, 0, items.size());
 }
 
+// Quick sort implemetation
+template <typename ItemType>
+void quick_sort(std::vector<ItemType>& items, bool ascending = true) {
+  detail::shuffle(items);
+  detail::quick_sort(items, ascending, 0, items.size());
+}
+
 }  // namespace sorting
 }  // namespace td
-
