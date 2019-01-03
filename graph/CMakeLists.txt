@@ -9,9 +9,13 @@ target_include_directories(${PROJECT_NAME}
 )
 
 # Add tests and link with libraries
-add_executable(graph_test test/graph_test.cc)
+add_executable(graph_test
+    test/directed_graph_test.cc
+    test/undirected_graph_test.cc
+)
 target_link_libraries(graph_test 
     graph
+    utils
     gtest_main
 )
 add_test(NAME graph_test COMMAND graph_test)
